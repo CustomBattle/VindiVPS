@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VindiVPS — เช่า VPS สำหรับ Vindictus</title>
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Sarabun:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0c10;
+    --surface: #111318;
+    --surface2: #181c23;
+    --border: #2a2f3a;
+    --accent: #00d4a0;
+    --accent2: #0099ff;
+    --gold: #f0b429;
+    --text: #e8eaf0;
+    --muted: #6b7280;
+    --danger: #ff4d6d;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Sarabun', sans-serif;
+    font-weight: 400;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* BG grid */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(0,212,160,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,212,160,0.03) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .glow-orb {
+    position: fixed;
+    width: 600px; height: 600px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(0,212,160,0.07) 0%, transparent 70%);
+    top: -200px; left: -100px;
+    pointer-events: none;
+    z-index: 0;
+  }
+  .glow-orb2 {
+    position: fixed;
+    width: 500px; height: 500px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(0,153,255,0.06) 0%, transparent 70%);
+    bottom: -100px; right: -100px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .container { max-width: 960px; margin: 0 auto; padding: 0 24px; position: relative; z-index: 1; }
+
+  /* NAV */
+  nav {
+    position: sticky; top: 0; z-index: 100;
+    background: rgba(10,12,16,0.85);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    padding: 14px 0;
+  }
+  nav .inner {
+    max-width: 960px; margin: 0 auto; padding: 0 24px;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .logo {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 22px; font-weight: 700;
+    letter-spacing: 1px;
+    color: var(--accent);
+  }
+  .logo span { color: var(--text); }
+
+  /* KEY CHECK */
+  .key-section {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 14px 0;
+  }
+  .key-section .inner {
+    max-width: 960px; margin: 0 auto; padding: 0 24px;
+    display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
+  }
+  .key-label {
+    font-size: 13px; color: var(--muted);
+    white-space: nowrap;
+    display: flex; align-items: center; gap: 6px;
+  }
+  .key-label svg { width: 14px; height: 14px; }
+  .key-input {
+    flex: 1; min-width: 200px;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    color: var(--text);
+    font-family: 'Rajdhani', monospace;
+    font-size: 15px; letter-spacing: 1px;
+    padding: 8px 14px;
+    border-radius: 6px;
+    outline: none;
+    transition: border-color .2s;
+  }
+  .key-input:focus { border-color: var(--accent); }
+  .key-input::placeholder { color: var(--muted); font-size: 13px; letter-spacing: 0; }
+  .key-btn {
+    background: transparent;
+    border: 1px solid var(--accent);
+    color: var(--accent);
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 14px; font-weight: 600;
+    padding: 8px 20px; border-radius: 6px;
+    cursor: pointer; transition: all .2s;
+    white-space: nowrap;
+  }
+  .key-btn:hover { background: var(--accent); color: #000; }
+  .key-msg {
+    width: 100%; font-size: 13px; padding: 8px 14px; border-radius: 6px; display: none;
+  }
+  .key-msg.pending { background: rgba(240,180,41,0.1); border: 1px solid rgba(240,180,41,0.3); color: var(--gold); }
+  .key-msg.ok { background: rgba(0,212,160,0.1); border: 1px solid rgba(0,212,160,0.3); color: var(--accent); }
+  .key-msg.err { background: rgba(255,77,109,0.1); border: 1px solid rgba(255,77,109,0.3); color: var(--danger); }
+
+  /* HERO */
+  .hero {
+    padding: 70px 0 50px;
+    text-align: center;
+  }
+  .hero-tag {
+    display: inline-flex; align-items: center; gap: 6px;
+    background: rgba(0,212,160,0.08);
+    border: 1px solid rgba(0,212,160,0.2);
+    color: var(--accent);
+    font-size: 12px; padding: 5px 14px; border-radius: 20px;
+    margin-bottom: 24px;
+    letter-spacing: 0.5px;
+  }
+  .hero h1 {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 52px; font-weight: 700;
+    line-height: 1.1;
+    margin-bottom: 16px;
+    letter-spacing: -0.5px;
+  }
+  .hero h1 .hl { color: var(--accent); }
+  .hero p {
+    font-size: 17px; color: var(--muted);
+    max-width: 480px; margin: 0 auto 10px;
+    line-height: 1.7;
+  }
+  .hero-note {
+    font-size: 13px; color: var(--muted);
+    margin-top: 8px;
+  }
+  .hero-note span {
+    color: var(--gold);
+    background: rgba(240,180,41,0.08);
+    border: 1px solid rgba(240,180,41,0.2);
+    padding: 3px 10px; border-radius: 4px;
+    font-size: 12px;
+  }
+
+  /* PLANS */
+  .plans-section { padding: 0 0 60px; }
+  .section-label {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 13px; letter-spacing: 2px; text-transform: uppercase;
+    color: var(--muted); text-align: center; margin-bottom: 32px;
+  }
+
+  .plans-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+  }
+
+  @media (max-width: 680px) {
+    .plans-grid { grid-template-columns: 1fr; }
+    .hero h1 { font-size: 36px; }
+  }
+
+  .plan-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 28px 24px;
+    position: relative;
+    transition: border-color .25s, transform .25s;
+    cursor: default;
+  }
+  .plan-card:hover { border-color: rgba(0,212,160,0.3); transform: translateY(-2px); }
+  .plan-card.featured {
+    border-color: var(--accent);
+    background: linear-gradient(160deg, rgba(0,212,160,0.05) 0%, var(--surface) 60%);
+  }
+
+  .pop-badge {
+    position: absolute; top: -12px; left: 50%; transform: translateX(-50%);
+    background: var(--accent); color: #000;
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 11px; font-weight: 700; letter-spacing: 1px;
+    padding: 3px 14px; border-radius: 20px;
+    white-space: nowrap;
+  }
+
+  .plan-tier {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 13px; font-weight: 600; letter-spacing: 2px;
+    text-transform: uppercase; color: var(--muted);
+    margin-bottom: 8px;
+  }
+  .plan-tier.gold { color: var(--gold); }
+  .plan-tier.cyan { color: var(--accent); }
+  .plan-tier.blue { color: var(--accent2); }
+
+  .plan-price {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 40px; font-weight: 700; color: var(--text);
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+  .plan-price sub { font-size: 18px; font-weight: 400; color: var(--muted); }
+  .plan-period { font-size: 12px; color: var(--muted); margin-bottom: 20px; }
+
+  .divider { height: 1px; background: var(--border); margin: 20px 0; }
+
+  .spec-list { list-style: none; margin-bottom: 24px; }
+  .spec-list li {
+    display: flex; align-items: center; gap: 10px;
+    font-size: 14px; color: var(--muted);
+    padding: 5px 0;
+  }
+  .spec-list li .icon {
+    width: 18px; height: 18px;
+    background: rgba(0,212,160,0.12);
+    border-radius: 4px;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .spec-list li .icon svg { width: 11px; height: 11px; stroke: var(--accent); }
+  .spec-list li strong { color: var(--text); }
+
+  .plan-btn {
+    width: 100%; padding: 12px;
+    border-radius: 8px;
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 16px; font-weight: 600; letter-spacing: 0.5px;
+    cursor: pointer; transition: all .2s;
+    border: 1px solid var(--border);
+    background: transparent; color: var(--text);
+  }
+  .plan-btn:hover { border-color: var(--accent); color: var(--accent); }
+  .plan-btn.featured-btn {
+    background: var(--accent); border-color: var(--accent); color: #000;
+  }
+  .plan-btn.featured-btn:hover { background: #00bfae; }
+  .plan-btn.selected-btn {
+    background: rgba(0,212,160,0.15);
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+
+  /* MODAL */
+  .overlay {
+    display: none;
+    position: fixed; inset: 0; z-index: 200;
+    background: rgba(0,0,0,0.7);
+    backdrop-filter: blur(4px);
+    align-items: center; justify-content: center;
+    padding: 24px;
+  }
+  .overlay.open { display: flex; }
+
+  .modal {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 32px;
+    max-width: 420px; width: 100%;
+    position: relative;
+  }
+  .modal-close {
+    position: absolute; top: 16px; right: 16px;
+    background: none; border: none; color: var(--muted);
+    font-size: 20px; cursor: pointer; line-height: 1;
+  }
+  .modal-close:hover { color: var(--text); }
+  .modal h3 {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 20px; font-weight: 700;
+    color: var(--text); margin-bottom: 6px;
+  }
+  .modal-plan-name {
+    font-size: 13px; color: var(--accent); margin-bottom: 20px;
+  }
+
+  .modal-key-label { font-size: 12px; color: var(--muted); margin-bottom: 8px; }
+  .modal-key {
+    background: var(--bg);
+    border: 1px dashed var(--accent);
+    border-radius: 8px;
+    padding: 14px;
+    font-family: 'Rajdhani', monospace;
+    font-size: 22px; font-weight: 700; letter-spacing: 3px;
+    color: var(--accent);
+    text-align: center;
+    margin-bottom: 20px;
+  }
+
+  .modal-info {
+    background: rgba(240,180,41,0.07);
+    border: 1px solid rgba(240,180,41,0.2);
+    border-radius: 8px;
+    padding: 12px 16px;
+    font-size: 13px; color: var(--gold);
+    line-height: 1.7;
+    margin-bottom: 20px;
+  }
+  .modal-info strong { font-weight: 500; }
+
+  .donate-btn {
+    display: block; width: 100%;
+    padding: 14px;
+    background: var(--accent); color: #000;
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 17px; font-weight: 700; letter-spacing: 0.5px;
+    border: none; border-radius: 8px; cursor: pointer;
+    transition: background .2s;
+    text-align: center; text-decoration: none;
+    margin-bottom: 10px;
+  }
+  .donate-btn:hover { background: #00bfae; }
+  .cancel-btn {
+    display: block; width: 100%;
+    padding: 10px;
+    background: none; border: 1px solid var(--border);
+    color: var(--muted); font-size: 14px; border-radius: 8px; cursor: pointer;
+  }
+  .cancel-btn:hover { border-color: var(--muted); color: var(--text); }
+
+  /* FOOTER */
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 24px 0;
+    text-align: center;
+    font-size: 13px; color: var(--muted);
+    position: relative; z-index: 1;
+  }
+</style>
+</head>
+<body>
+
+<div class="glow-orb"></div>
+<div class="glow-orb2"></div>
+
+<!-- NAV -->
+<nav>
+  <div class="inner">
+    <div class="logo">VINDI<span>VPS</span></div>
+    <div style="font-size:13px;color:var(--muted);">🎮 สำหรับ Vindictus โดยเฉพาะ</div>
+  </div>
+</nav>
+
+<!-- KEY CHECK -->
+<div class="key-section">
+  <div class="inner">
+    <div class="key-label">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"/></svg>
+      ตรวจสอบคีย์
+    </div>
+    <input class="key-input" id="keyInput" type="text" placeholder="กรอกคีย์ที่ได้รับ เช่น VINDI-S7K2-4XPQ" maxlength="19" />
+    <button class="key-btn" onclick="checkKey()">ตรวจสอบ</button>
+    <div class="key-msg" id="keyMsg"></div>
+  </div>
+</div>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="container">
+    <div class="hero-tag">⚡ เร็ว · เสถียร · ราคาไม่แพง</div>
+    <h1>เช่า VPS เล่น<br><span class="hl">Vindictus</span> ลื่นกว่าเดิม</h1>
+    <p>ไม่ต้องสมัครสมาชิก เลือก plan รับคีย์ทันที จ่ายแล้วใช้ได้เลย</p>
+    <div class="hero-note">
+      หลังจ่ายเงิน <span>รอ 5–10 นาที</span> จากนั้นนำคีย์มาตรวจสอบด้านบน
+    </div>
+  </div>
+</div>
+
+<!-- PLANS -->
+<div class="plans-section">
+  <div class="container">
+    <div class="section-label">— เลือก plan ที่เหมาะกับคุณ —</div>
+    <div class="plans-grid">
+
+      <!-- STARTER -->
+      <div class="plan-card">
+        <div class="plan-tier cyan">Starter</div>
+        <div class="plan-price">49<sub>฿</sub></div>
+        <div class="plan-period">ต่อ 30 วัน</div>
+        <div class="divider"></div>
+        <ul class="spec-list">
+          <li>
+            <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg></div>
+            <span>CPU <strong>2 Core</strong></span>
+          </li>
+          <li>
+            <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg></div>
+            <span>RAM <strong>4 GB</strong></span>
+          </li>
+          <li>
+            <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg></div>
+            <span>Windows Server</span>
+          </li>
+          <li>
+            <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg></div>
+            <span>Ping ต่ำ (ไทย)</span>
+          </li>
+        </ul>
+        <button class="plan-btn" id="btn1" onclick="selectPlan(1,'VINDI-S7K2-4XPQ','Starter','49฿')">
+          เลือก Starter
+        </button>
+      </div>
+
+      <!-- PRO (featured) -->
+      <div class="plan-card featured">
+        <div class="pop-badge">⭐ ยอดนิยม</div>
+        <div class="plan-tier gold">Pro</div>
+        <div class="plan-price">99<sub>฿</sub></div>
+        <div class="plan-period">ต่อ 30 วัน</div>
+        <div class="divider"></div>
+        <ul class="spec-list">
+          <li>
+            <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg></div>
+            <span>CPU <strong>4 Core</strong></span>
+          </li>
+          <li>
+            <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg></div>
+            <span>RAM <strong>8 GB</strong></span>
+          </li>
+          <li>
+            <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg></div>
+            <span>Windows Server</span>
+          </li>
+          <li>
+            <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg></div>
+            <span>Ping ต่ำมาก (ไทย)</span>
+          </li>
+          <li>
+            <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg></div>
+            <span>ติดตั้ง Vindictus ไว้ให้</span>
+          </li>
+        </ul>
+        <button class="plan-btn featured-btn" id="btn2" onclick="selectPlan(2,'VINDI-P3M8-9ZRY','Pro','99฿')">
+          เลือก Pro
+        </button>
+      </div>
+
+      <!-- ULTRA -->
+      <div class="plan-card">
+        <div class="plan-tier blue">Ultra</div>
+        <div class="plan-price">199<sub>฿</sub></div>
+        <div class="plan-period">ต่อ 30 วัน</div>
+        <div class="divider"></div>
+        <ul class="spec-list">
+          <li>
+            <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg></div>
+            <span>CPU <strong>8 Core</strong></span>
+          </li>
+          <li>
+            <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg></div>
+            <span>RAM <strong>16 GB</strong></span>
+          </li>
+          <li>
+            <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg></div>
+            <span>Windows Server</span>
+          </li>
+          <li>
+            <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg></div>
+            <span>Ping ต่ำที่สุด (ไทย)</span>
+          </li>
+          <li>
+            <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg></div>
+            <span>ติดตั้ง Vindictus ไว้ให้</span>
+          </li>
+          <li>
+            <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg></div>
+            <span>Priority Support</span>
+          </li>
+        </ul>
+        <button class="plan-btn" id="btn3" onclick="selectPlan(3,'VINDI-U1F5-2WBN','Ultra','199฿')">
+          เลือก Ultra
+        </button>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- MODAL -->
+<div class="overlay" id="overlay" onclick="closeIfOutside(event)">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal()">✕</button>
+    <h3>รับคีย์สำเร็จ!</h3>
+    <div class="modal-plan-name" id="modalPlanName">Plan: Pro — 99฿</div>
+    <div class="modal-key-label">คีย์ชั่วคราวของคุณ</div>
+    <div class="modal-key" id="modalKey">VINDI-XXXX-XXXX</div>
+    <div class="modal-info">
+      <strong>วิธีจ่ายเงิน:</strong> กดปุ่มด้านล่าง → นำคีย์ด้านบนไปใส่ในช่อง Easydonate → ชำระเงิน<br><br>
+      หลังจ่ายแล้ว <strong>รอ 5–10 นาที</strong> จากนั้นนำคีย์ไปตรวจสอบที่แถบด้านบนของเว็บได้เลย
+    </div>
+    <a class="donate-btn" href="https://easydonate.ru" target="_blank">💳 จ่ายเงินผ่าน Easydonate</a>
+    <button class="cancel-btn" onclick="closeModal()">ปิด</button>
+  </div>
+</div>
+
+<footer>
+  <div class="container">
+    VindiVPS · บริการเช่า VPS สำหรับ Vindictus · ติดต่อแอดมินหากมีปัญหา
+  </div>
+</footer>
+
+<script>
+  const mockKeys = {
+    'VINDI-S7K2-4XPQ': 'pending',
+    'VINDI-P3M8-9ZRY': 'approved',
+    'VINDI-U1F5-2WBN': 'pending',
+  };
+
+  function selectPlan(n, key, name, price) {
+    [1,2,3].forEach(i => {
+      const b = document.getElementById('btn'+i);
+      b.classList.remove('selected-btn');
+      const labels = ['เลือก Starter','เลือก Pro','เลือก Ultra'];
+      b.textContent = labels[i-1];
+      if(i===2) { b.classList.remove('selected-btn'); b.classList.add('featured-btn'); }
+    });
+    const btn = document.getElementById('btn'+n);
+    btn.classList.remove('featured-btn');
+    btn.classList.add('selected-btn');
+    btn.textContent = '✓ เลือกแล้ว';
+
+    document.getElementById('modalPlanName').textContent = 'Plan: ' + name + ' — ' + price;
+    document.getElementById('modalKey').textContent = key;
+    document.getElementById('overlay').classList.add('open');
+  }
+
+  function closeModal() {
+    document.getElementById('overlay').classList.remove('open');
+  }
+
+  function closeIfOutside(e) {
+    if(e.target === document.getElementById('overlay')) closeModal();
+  }
+
+  function checkKey() {
+    const raw = document.getElementById('keyInput').value.trim().toUpperCase();
+    const msg = document.getElementById('keyMsg');
+    msg.style.display = 'block';
+    msg.className = 'key-msg';
+    if(!raw) {
+      msg.classList.add('pending');
+      msg.textContent = '⚠ กรุณากรอกคีย์ก่อน';
+      return;
+    }
+    const status = mockKeys[raw];
+    if(!status) {
+      msg.classList.add('err');
+      msg.textContent = '✕ ไม่พบคีย์นี้ในระบบ — กรุณาตรวจสอบอีกครั้ง หรือรอให้ครบ 10 นาที';
+    } else if(status === 'pending') {
+      msg.classList.add('pending');
+      msg.textContent = '⏳ คีย์รอการอนุมัติ — กรุณารอ 5–10 นาทีหลังชำระเงิน แล้วตรวจสอบใหม่';
+    } else {
+      msg.classList.add('ok');
+      msg.textContent = '✓ คีย์ได้รับการอนุมัติแล้ว! ข้อมูล VPS จะถูกส่งให้ทางแชท';
+    }
+  }
+
+  document.getElementById('keyInput').addEventListener('keydown', e => {
+    if(e.key === 'Enter') checkKey();
+  });
+
+  // auto format key input
+  document.getElementById('keyInput').addEventListener('input', function() {
+    let v = this.value.replace(/[^a-zA-Z0-9]/g,'').toUpperCase();
+    let out = '';
+    for(let i=0;i<v.length;i++){
+      if(i===5||i===9) out+='-';
+      out+=v[i];
+    }
+    this.value = out.slice(0,19);
+  });
+</script>
+</body>
+</html>
