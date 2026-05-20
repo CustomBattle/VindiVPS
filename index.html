@@ -427,7 +427,7 @@
             <span>Ping ต่ำ (ไทย)</span>
           </li>
         </ul>
-        <button class="plan-btn" id="btn1" onclick="selectPlan(1,'VINDI-S7K2-4XPQ','Starter','49฿')">
+        <button class="plan-btn" id="btn1" onclick="selectPlan(1,'Starter','49฿')">
           เลือก Starter
         </button>
       </div>
@@ -461,7 +461,7 @@
             <span>ติดตั้ง Vindictus ไว้ให้</span>
           </li>
         </ul>
-        <button class="plan-btn featured-btn" id="btn2" onclick="selectPlan(2,'VINDI-P3M8-9ZRY','Pro','99฿')">
+        <button class="plan-btn featured-btn" id="btn2" onclick="selectPlan(2,'Pro','99฿')">
           เลือก Pro
         </button>
       </div>
@@ -498,7 +498,7 @@
             <span>Priority Support</span>
           </li>
         </ul>
-        <button class="plan-btn" id="btn3" onclick="selectPlan(3,'VINDI-U1F5-2WBN','Ultra','199฿')">
+        <button class="plan-btn" id="btn3" onclick="selectPlan(3,'Ultra','199฿')">
           เลือก Ultra
         </button>
       </div>
@@ -531,13 +531,13 @@
 </footer>
 
 <script>
-  const mockKeys = {
-    'VINDI-S7K2-4XPQ': 'pending',
-    'VINDI-P3M8-9ZRY': 'approved',
-    'VINDI-U1F5-2WBN': 'pending',
-  };
+  function randomKey() {
+    const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+    const seg = (n) => Array.from({length:n}, () => chars[Math.floor(Math.random()*chars.length)]).join('');
+    return 'VINDI-' + seg(4) + '-' + seg(4);
+  }
 
-  function selectPlan(n, key, name, price) {
+  function selectPlan(n, name, price) {
     [1,2,3].forEach(i => {
       const b = document.getElementById('btn'+i);
       b.classList.remove('selected-btn');
@@ -550,6 +550,7 @@
     btn.classList.add('selected-btn');
     btn.textContent = '✓ เลือกแล้ว';
 
+    const key = randomKey();
     document.getElementById('modalPlanName').textContent = 'Plan: ' + name + ' — ' + price;
     document.getElementById('modalKey').textContent = key;
     document.getElementById('overlay').classList.add('open');
@@ -563,26 +564,48 @@
     if(e.target === document.getElementById('overlay')) closeModal();
   }
 
-  function checkKey() {
+  const API_URL = 'https://script.google.com/macros/s/AKfycbyllowhV1fWX-b133Tl_o_8lqwqT5XUq_PvG2Hi3DW1YufVqv9VgmL47dSKArlorWbW/exec';
+
+  async function checkKey() {
     const raw = document.getElementById('keyInput').value.trim().toUpperCase();
     const msg = document.getElementById('keyMsg');
     msg.style.display = 'block';
     msg.className = 'key-msg';
-    if(!raw) {
+
+    if (!raw) {
       msg.classList.add('pending');
       msg.textContent = '⚠ กรุณากรอกคีย์ก่อน';
       return;
     }
-    const status = mockKeys[raw];
-    if(!status) {
-      msg.classList.add('err');
-      msg.textContent = '✕ ไม่พบคีย์นี้ในระบบ — กรุณาตรวจสอบอีกครั้ง หรือรอให้ครบ 10 นาที';
-    } else if(status === 'pending') {
-      msg.classList.add('pending');
-      msg.textContent = '⏳ คีย์รอการอนุมัติ — กรุณารอ 5–10 นาทีหลังชำระเงิน แล้วตรวจสอบใหม่';
-    } else {
-      msg.classList.add('ok');
-      msg.textContent = '✓ คีย์ได้รับการอนุมัติแล้ว! ข้อมูล VPS จะถูกส่งให้ทางแชท';
+
+    msg.classList.add('pending');
+    msg.textContent = '⏳ กำลังตรวจสอบ...';
+
+    try {
+      const res  = await fetch(API_URL + '?key=' + encodeURIComponent(raw));
+      const data = await res.json();
+
+      if (data.status === 'approved' && data.fileId) {
+        msg.className = 'key-msg ok';
+        msg.textContent = '✓ คีย์ได้รับการอนุมัติแล้ว! ไฟล์กำลังดาวน์โหลด...';
+        const dlUrl = 'https://drive.google.com/uc?export=download&id=' + data.fileId;
+        const a = document.createElement('a');
+        a.href = dlUrl;
+        a.download = 'VindiVPS.vbs';
+        a.click();
+      } else if (data.status === 'pending') {
+        msg.classList.add('pending');
+        msg.textContent = '⏳ คีย์รอการอนุมัติ — กรุณารอ 5–10 นาทีหลังชำระเงิน แล้วตรวจสอบใหม่';
+      } else if (data.status === 'notfound') {
+        msg.classList.add('err');
+        msg.textContent = '✕ ไม่พบคีย์นี้ในระบบ — กรุณาตรวจสอบอีกครั้ง';
+      } else if (data.status === 'error') {
+        msg.classList.add('err');
+        msg.textContent = '✕ เกิดข้อผิดพลาด: ' + (data.message || 'ลองใหม่อีกครั้ง');
+      }
+    } catch(err) {
+      msg.className = 'key-msg err';
+      msg.textContent = '✕ ไม่สามารถเชื่อมต่อระบบได้ — ลองใหม่อีกครั้ง';
     }
   }
 
