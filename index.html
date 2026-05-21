@@ -28,6 +28,7 @@
     font-weight: 400;
     min-height: 100vh;
     overflow-x: hidden;
+    zoom: 1.25;
   }
 
   /* BG grid */
@@ -191,8 +192,22 @@
   .plans-section { padding: 0 0 60px; }
   .section-label {
     font-family: 'Rajdhani', sans-serif;
-    font-size: 13px; letter-spacing: 2px; text-transform: uppercase;
-    color: var(--muted); text-align: center; margin-bottom: 32px;
+    font-size: 15px; letter-spacing: 4px; text-transform: uppercase;
+    color: var(--accent); text-align: center; margin-bottom: 32px;
+    position: relative;
+    display: flex; align-items: center; justify-content: center; gap: 14px;
+    text-shadow: 0 0 20px rgba(0,212,160,0.5);
+  }
+  .section-label::before,
+  .section-label::after {
+    content: '';
+    flex: 1;
+    max-width: 80px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(0,212,160,0.5));
+  }
+  .section-label::after {
+    background: linear-gradient(90deg, rgba(0,212,160,0.5), transparent);
   }
 
   .plans-grid {
@@ -247,9 +262,35 @@
     margin-bottom: 4px;
   }
   .plan-price sub { font-size: 18px; font-weight: 400; color: var(--muted); }
-  .plan-period { font-size: 12px; color: var(--muted); margin-bottom: 20px; }
+  .plan-period {
+    font-size: 12px;
+    margin-bottom: 10px;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-family: 'Rajdhani', sans-serif;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+  }
+  .plan-period.period-cyan {
+    color: var(--accent);
+    background: rgba(0,212,160,0.1);
+    border: 1px solid rgba(0,212,160,0.25);
+  }
+  .plan-period.period-gold {
+    color: var(--gold);
+    background: rgba(240,180,41,0.1);
+    border: 1px solid rgba(240,180,41,0.25);
+  }
+  .plan-period.period-blue {
+    color: var(--accent2);
+    background: rgba(0,153,255,0.1);
+    border: 1px solid rgba(0,153,255,0.25);
+  }
 
-  .divider { height: 1px; background: var(--border); margin: 20px 0; }
+  .divider { height: 1px; background: var(--border); margin: 12px 0 20px; }
 
   .spec-list { list-style: none; margin-bottom: 24px; }
   .spec-list li {
@@ -463,7 +504,7 @@
 <div class="hero">
   <div class="container">
     <div class="hero-tag">⚡ เหมาะกับเน็ตหอที่เปิด DMZ ไม่ได้ · ราคาไม่แพง</div>
-    <h1>VPS สำหรับ <span class="hl">Vindictus</span><br>แก้เกมหลุด และโรค 1 Bar</h1>
+    <h1>VPS สำหรับ <span class="hl">Vindictus</span></h1>
     <p>ไม่ต้องสมัครสมาชิก เลือก plan รับคีย์จ่ายตังค์ได้เลย</p>
     <div class="hero-note">
       หลังจ่ายเงิน <span>รอ 10–15 นาที</span> ระบบ Setup VPS ให้งับ
@@ -477,32 +518,32 @@
     <div class="section-label">— เลือก plan ที่เหมาะกับคุณ —</div>
     <div class="plans-grid">
 
-      <!-- STARTER -->
+      <!-- Basic -->
       <div class="plan-card">
-        <div class="plan-tier cyan">Starter</div>
-        <div class="plan-price">49<sub>฿</sub></div>
-        <div class="plan-period">ต่อ 30 วัน</div>
+        <div class="plan-tier cyan">Basic</div>
+        <div class="plan-price">8<sub>฿</sub></div>
+        <div class="plan-period period-cyan">⏱ ต่อ 1 วัน</div>
         <div class="divider"></div>
         <ul class="spec-list">
           <li>
             <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg></div>
-            <span>CPU <strong>2 Core</strong></span>
+            <span>แก้โรค <strong>1 Bar</strong></span>
           </li>
           <li>
             <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg></div>
-            <span>RAM <strong>4 GB</strong></span>
+            <span>แก้ไข <strong>อาการหลุด</strong></span>
           </li>
           <li>
             <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg></div>
-            <span>Windows Server</span>
+            <span>ใช้เฉพาะเกม ไม่กระทบเน็ตหลัก</span>
           </li>
           <li>
             <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg></div>
-            <span>Ping ต่ำ (ไทย)</span>
+            <span>ใช้ร่วมกันได้สูงสุด 2 คน</span>
           </li>
         </ul>
-        <button class="plan-btn" id="btn1" onclick="selectPlan(1,'Starter','49฿')">
-          เลือก Starter
+        <button class="plan-btn" id="btn1" onclick="selectPlan(1,'Basic','8฿')">
+          เลือก Basic
         </button>
       </div>
 
@@ -510,32 +551,32 @@
       <div class="plan-card featured">
         <div class="pop-badge">⭐ ยอดนิยม</div>
         <div class="plan-tier gold">Pro</div>
-        <div class="plan-price">99<sub>฿</sub></div>
-        <div class="plan-period">ต่อ 30 วัน</div>
+        <div class="plan-price">50<sub>฿</sub></div>
+        <div class="plan-period period-gold">⏱ ต่อ 7 วัน</div>
         <div class="divider"></div>
         <ul class="spec-list">
           <li>
             <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg></div>
-            <span>CPU <strong>4 Core</strong></span>
+            <span>ราคาสุดคุ้ม <strong>ตกวันละ 7 บาท</strong></span>
           </li>
           <li>
             <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg></div>
-            <span>RAM <strong>8 GB</strong></span>
+            <span>แก้โรค <strong>1 Bar</strong></span>
           </li>
           <li>
             <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg></div>
-            <span>Windows Server</span>
+            <span>แก้ไข <strong>อาการหลุด</strong></span>
           </li>
           <li>
             <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg></div>
-            <span>Ping ต่ำมาก (ไทย)</span>
+            <span>ใช้เฉพาะเกม ไม่กระทบเน็ตหลัก</span>
           </li>
           <li>
             <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg></div>
-            <span>ติดตั้ง Vindictus ไว้ให้</span>
+            <span>ใช้ร่วมกันได้สูงสุด 4 คน</span>
           </li>
         </ul>
-        <button class="plan-btn featured-btn" id="btn2" onclick="selectPlan(2,'Pro','99฿')">
+        <button class="plan-btn featured-btn" id="btn2" onclick="selectPlan(2,'Pro','50฿')">
           เลือก Pro
         </button>
       </div>
@@ -544,32 +585,28 @@
       <div class="plan-card">
         <div class="plan-tier blue">Ultra</div>
         <div class="plan-price">199<sub>฿</sub></div>
-        <div class="plan-period">ต่อ 30 วัน</div>
+        <div class="plan-period period-blue">⏱ ต่อ 30 วัน</div>
         <div class="divider"></div>
         <ul class="spec-list">
           <li>
             <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg></div>
-            <span>CPU <strong>8 Core</strong></span>
+            <span>ราคาสุดคุ้ม <strong>ตกวันละ 6.6 บาท</strong></span>
           </li>
           <li>
             <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg></div>
-            <span>RAM <strong>16 GB</strong></span>
+            <span>แก้โรค <strong>1 Bar</strong></span>
           </li>
           <li>
             <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg></div>
-            <span>Windows Server</span>
+            <span>แก้ไข <strong>อาการหลุด</strong></span>
           </li>
           <li>
             <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg></div>
-            <span>Ping ต่ำที่สุด (ไทย)</span>
+            <span>ใช้เฉพาะเกม ไม่กระทบเน็ตหลัก</span>
           </li>
           <li>
             <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg></div>
-            <span>ติดตั้ง Vindictus ไว้ให้</span>
-          </li>
-          <li>
-            <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg></div>
-            <span>Priority Support</span>
+            <span>ใช้ร่วมกันได้สูงสุด 4 คน</span>
           </li>
         </ul>
         <button class="plan-btn" id="btn3" onclick="selectPlan(3,'Ultra','199฿')">
@@ -607,7 +644,7 @@
 
 <footer>
   <div class="container">
-    VindiVPS · บริการเช่า VPS สำหรับ Vindictus · ติดต่อแอดมินหากมีปัญหา
+    VindiVPS · VPS สำหรับคนรัก Vindictus · ติดต่อแอดมินหากมีปัญหา
   </div>
 </footer>
 
@@ -658,7 +695,7 @@
     [1,2,3].forEach(i => {
       const b = document.getElementById('btn'+i);
       b.classList.remove('selected-btn');
-      const labels = ['เลือก Starter','เลือก Pro','เลือก Ultra'];
+      const labels = ['เลือก Basic','เลือก Pro','เลือก Ultra'];
       b.textContent = labels[i-1];
       if(i===2) { b.classList.remove('selected-btn'); b.classList.add('featured-btn'); }
     });
@@ -753,7 +790,7 @@
         msg.textContent = '⏳ คีย์ได้รับการอนุมัติแล้ว! — ระบบกำลังสร้าง VPS ใช้เวลา 10-15 นาที';
       } else if (data.status === 'notfound') {
         msg.classList.add('pending');
-        msg.textContent = '⏳ คีย์รอการอนุมัติ — กรุณารอ 10–15 นาทีหลังชำระเงิน แล้วตรวจสอบใหม่';
+        msg.textContent = '⏳ คีย์รอการอนุมัติ — กรุณารอ 5–10 นาทีหลังชำระเงิน แล้วตรวจสอบใหม่';
       } else if (data.status === 'error') {
         msg.classList.add('err');
         msg.textContent = '✕ เกิดข้อผิดพลาด: ' + (data.message || 'ลองใหม่อีกครั้ง');
