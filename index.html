@@ -569,7 +569,7 @@
     if(e.target === document.getElementById('overlay')) closeModal();
   }
 
-  const API_URL = 'https://script.google.com/macros/s/AKfycbybKYUl5S2wxocgOk3eQnOE-pen3N-nXbq0dzhFPu6589y6w9UWkvSspTpfHjjADKqm/exec';
+  const API_URL = 'https://script.google.com/macros/s/AKfycbwyOLDThPU-2ILsx6WStl7dds7GDPWsUehsD4aCjlWqmZ_ZpYQ28_9VyhXIC113Ix94/exec';
 
   async function checkKey() {
     const raw = document.getElementById('keyInput').value.trim().toUpperCase();
@@ -619,12 +619,20 @@
     btn.disabled = true;
     try {
       const res  = await fetch(API_URL + '?download=' + encodeURIComponent(fileId));
-      const text = await res.text();
-      const blob = new Blob([text], { type: 'application/octet-stream' });
+      const json = await res.json();
+
+      // decode Base64 → binary
+      const binary = atob(json.data);
+      const bytes  = new Uint8Array(binary.length);
+      for (let i = 0; i < binary.length; i++) {
+        bytes[i] = binary.charCodeAt(i);
+      }
+
+      const blob = new Blob([bytes], { type: 'application/zip' });
       const url  = URL.createObjectURL(blob);
       const a    = document.createElement('a');
       a.href     = url;
-      a.download = 'VindiVPS.vbs';
+      a.download = json.filename || 'VindiVPS.zip';
       document.body.appendChild(a);
       a.click();
       document.body.removeChild(a);
