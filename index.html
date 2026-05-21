@@ -524,33 +524,26 @@
   /* YOUTUBE SECTION */
   .yt-section { padding: 20px 0 60px; position: relative; z-index: 1; }
   .yt-wrap {
-    position: relative; max-width: 680px; margin: 0 auto;
-    background: var(--surface); border: 1px solid rgba(0,212,160,0.2);
-    border-radius: 16px; padding: 28px 28px 22px;
-    box-shadow: 0 0 0 1px rgba(0,212,160,0.08), 0 0 40px rgba(0,212,160,0.07), 0 8px 32px rgba(0,0,0,0.4);
+    position: relative; max-width: 720px; margin: 0 auto;
   }
-  .yt-glow-ring {
-    position: absolute; inset: -1px; border-radius: 16px;
-    background: linear-gradient(135deg, rgba(0,212,160,0.25), rgba(0,153,255,0.15), transparent 60%);
-    z-index: 0; pointer-events: none;
-  }
+  .yt-glow-ring { display: none; }
   .yt-badge {
-    position: relative; z-index: 1;
     display: inline-flex; align-items: center; gap: 6px;
     background: rgba(0,212,160,0.1); border: 1px solid rgba(0,212,160,0.25);
     color: var(--accent); font-family: 'Rajdhani', sans-serif;
     font-size: 12px; font-weight: 700; letter-spacing: 1px;
-    padding: 4px 14px; border-radius: 20px; margin-bottom: 16px;
+    padding: 4px 14px; border-radius: 20px; margin-bottom: 12px;
     text-shadow: 0 0 10px rgba(0,212,160,0.5);
   }
   .yt-frame-wrap {
-    position: relative; z-index: 1; width: 100%; aspect-ratio: 16/9;
-    border-radius: 10px; overflow: hidden;
-    border: 1px solid rgba(0,212,160,0.15); box-shadow: 0 0 24px rgba(0,0,0,0.5);
+    width: 100%; aspect-ratio: 16/9;
+    border-radius: 12px; overflow: hidden;
+    border: 1px solid rgba(0,212,160,0.18);
+    box-shadow: 0 0 32px rgba(0,212,160,0.08), 0 8px 40px rgba(0,0,0,0.5);
   }
   .yt-frame-wrap iframe { width: 100%; height: 100%; display: block; }
   .yt-caption {
-    position: relative; z-index: 1; margin-top: 14px;
+    margin-top: 12px;
     font-size: 13px; color: var(--muted); text-align: center; letter-spacing: 0.2px;
   }
 </style>
