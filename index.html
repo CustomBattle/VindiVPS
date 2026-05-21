@@ -1250,20 +1250,19 @@
 
   function copyAndClose() {
     const key = document.getElementById('copyConfirmKey').textContent;
-    try {
-      navigator.clipboard.writeText(key);
-    } catch(e) {
+    try { navigator.clipboard.writeText(key); } catch(e) {
       const ta = document.createElement('textarea');
-      ta.value = key;
-      ta.style.cssText = 'position:fixed;top:0;opacity:0;';
-      document.body.appendChild(ta);
-      ta.focus(); ta.select();
+      ta.value = key; ta.style.cssText = 'position:fixed;top:0;opacity:0;';
+      document.body.appendChild(ta); ta.focus(); ta.select();
       try { document.execCommand('copy'); } catch(e2) {}
       document.body.removeChild(ta);
     }
     const btn = document.getElementById('copyConfirmCopyBtn');
     btn.textContent = '✓ คัดลอกแล้ว!';
-    setTimeout(() => closeCopyConfirm(), 900);
+    clearTimeout(btn._resetTimer);
+    btn._resetTimer = setTimeout(() => {
+      btn.textContent = '📋 คัดลอก';
+    }, 1000);
   }
 
   function closeModal() { animateClose('overlay'); }
@@ -1374,7 +1373,8 @@
       document.body.removeChild(ta);
     }
     btn.textContent = '✓ คัดลอกแล้ว!';
-    setTimeout(() => { btn.textContent = '📋 คัดลอกรหัส'; }, 2000);
+    clearTimeout(btn._resetTimer);
+    btn._resetTimer = setTimeout(() => { btn.textContent = '📋 คัดลอกรหัส'; }, 1000);
   }
 
   document.getElementById('keyInput').addEventListener('keydown', e => {
@@ -1394,15 +1394,27 @@
 
   function copyKey() {
     const key = document.getElementById('modalKey').textContent;
-    navigator.clipboard.writeText(key).then(() => {
-      const btn = document.getElementById('copyBtn');
-      btn.textContent = '✓ คัดลอกแล้ว!';
-      btn.classList.add('copied');
-      setTimeout(() => {
-        btn.textContent = '📋 คัดลอก';
-        btn.classList.remove('copied');
-      }, 2000);
-    });
+    const btn = document.getElementById('copyBtn');
+    const box = document.getElementById('modalKey');
+    try { navigator.clipboard.writeText(key); } catch(e) {
+      const ta = document.createElement('textarea');
+      ta.value = key; ta.style.cssText = 'position:fixed;top:0;opacity:0;';
+      document.body.appendChild(ta); ta.focus(); ta.select();
+      try { document.execCommand('copy'); } catch(e2) {}
+      document.body.removeChild(ta);
+    }
+    box.classList.remove('flash-copy');
+    void box.offsetWidth;
+    box.classList.add('flash-copy');
+    clearTimeout(box._flashTimer);
+    box._flashTimer = setTimeout(() => box.classList.remove('flash-copy'), 600);
+    btn.textContent = '✓ คัดลอกแล้ว!';
+    btn.classList.add('copied');
+    clearTimeout(btn._resetTimer);
+    btn._resetTimer = setTimeout(() => {
+      btn.textContent = '📋 คัดลอกคีย์';
+      btn.classList.remove('copied');
+    }, 1000);
   }
 
   function saveKey() {
@@ -1557,7 +1569,8 @@ window.copyAndClose = function() {
   box.classList.remove('flash-copy');
   void box.offsetWidth;
   box.classList.add('flash-copy');
-  setTimeout(() => box.classList.remove('flash-copy'), 600);
+  clearTimeout(box._flashTimer);
+  box._flashTimer = setTimeout(() => box.classList.remove('flash-copy'), 600);
   origCopyAndClose();
 };
 </script>
