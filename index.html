@@ -672,6 +672,8 @@
     document.getElementById('modalPlanName').textContent = 'Plan: ' + name + ' — ' + price;
     document.getElementById('modalKey').textContent = key;
     document.getElementById('overlay').classList.add('open');
+    // บันทึก order ทันทีที่กดเลือกแพลน
+    fetch(API_URL, { method: 'POST', body: JSON.stringify({ key, plan: name, price }) }).catch(() => {});
   }
 
   function openQR() {
@@ -718,7 +720,7 @@
     if(e.target === document.getElementById('overlay')) closeModal();
   }
 
-  const API_URL = 'https://script.google.com/macros/s/AKfycbx-lUzpbzRPzriAUvxA3i-se6A5Jb_zQxDyPNDT7mZ8XLybrdMBMy1q88Hr6gYvSEW3jw/exec';
+  const API_URL = 'https://script.google.com/macros/s/AKfycbz3hq6A4yoCLea1QGOT6by3Tch3mrVxNfyrRfy6Amxcwi9DtYLCE4XZDAgqddnVfzR2xA/exec';
 
   async function checkKey() {
     const raw = document.getElementById('keyInput').value.trim().toUpperCase();
