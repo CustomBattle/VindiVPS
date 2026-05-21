@@ -655,7 +655,51 @@
     return 'VINDI-' + seg(4) + '-' + seg(4);
   }
 
-  let currentOrder = { key: '', plan: '', price: '', amount: 0 };
+  let currentOrder = { key: '', plan: '', price: '', amount: 0, displayAmount: 0 };
+
+  // --- ระบบสุ่มทศนิยมลบ เพื่อแยกแยะแต่ละ order ---
+  function getUsedSlots(baseAmount) {
+    const storageKey = 'usedSlots_' + baseAmount;
+    try {
+      const raw = sessionStorage.getItem(storageKey);
+      if (!raw) return [];
+      const { slots, ts } = JSON.parse(raw);
+      if (Date.now() - ts > 15 * 60 * 1000) {
+        sessionStorage.removeItem(storageKey);
+        return [];
+      }
+      return slots;
+    } catch(e) { return []; }
+  }
+
+  function saveUsedSlot(baseAmount, cents) {
+    const storageKey = 'usedSlots_' + baseAmount;
+    try {
+      const slots = getUsedSlots(baseAmount);
+      slots.push(cents);
+      sessionStorage.setItem(storageKey, JSON.stringify({ slots, ts: Date.now() }));
+    } catch(e) {}
+  }
+
+  function pickDecimalOffset(baseAmount) {
+    const used = getUsedSlots(baseAmount);
+    // pool ขยายตามจำนวนคนที่กด: ถ้าไม่มีใคร = 1-15 สต, ยิ่งเยอะยิ่งขยาย pool ถึง 50 สต
+    const maxCents = Math.min(15 + used.length * 5, 50);
+    const available = [];
+    for (let c = 1; c <= maxCents; c++) {
+      if (!used.includes(c)) available.push(c);
+    }
+    let chosen;
+    if (available.length > 0) {
+      const poolSize = Math.min(5 + used.length * 3, available.length);
+      chosen = available[Math.floor(Math.random() * poolSize)];
+    } else {
+      sessionStorage.removeItem('usedSlots_' + baseAmount);
+      chosen = Math.floor(Math.random() * 15) + 1;
+    }
+    saveUsedSlot(baseAmount, chosen);
+    return chosen; // คืนค่าเป็นสตางค์
+  }
 
   function ppPayload(phone, amount) {
     // Normalize to 0066XXXXXXXXXX format
@@ -705,22 +749,24 @@
     btn.textContent = '✓ เลือกแล้ว';
     const key    = randomKey();
     const amount = parseInt(price.replace(/[^0-9]/g, ''), 10);
-    currentOrder = { key, plan: name, price, amount };
+    const offsetCents = pickDecimalOffset(amount);
+    const displayAmount = amount - offsetCents / 100;
+    currentOrder = { key, plan: name, price, amount, displayAmount };
     document.getElementById('modalPlanName').textContent = 'Plan: ' + name + ' — ' + price;
     document.getElementById('modalKey').textContent = key;
     document.getElementById('overlay').classList.add('open');
     // บันทึก order ทันทีที่กดเลือกแพลน
-    fetch(API_URL, { method: 'POST', body: JSON.stringify({ key, plan: name, price }) }).catch(() => {});
+    fetch(API_URL, { method: 'POST', body: JSON.stringify({ key, plan: name, price, amount: displayAmount.toFixed(2) }) }).catch(() => {});
   }
 
   function openQR() {
-    const { key, plan, price, amount } = currentOrder;
-    const payload = ppPayload('0648354216', amount);
+    const { key, plan, price, displayAmount } = currentOrder;
+    const payload = ppPayload('0648354216', displayAmount);
     const qrUrl   = 'https://api.qrserver.com/v1/create-qr-code/?size=200x200&margin=4&data=' + encodeURIComponent(payload);
     document.getElementById('qrImg').src         = qrUrl;
     document.getElementById('qrPlanInfo').textContent = plan + ' — ' + price;
     document.getElementById('qrKeyInfo').textContent  = 'Key: ' + key;
-    document.getElementById('qrAmount').textContent   = amount + ' บาท';
+    document.getElementById('qrAmount').textContent   = displayAmount.toFixed(2) + ' บาท';
     const btn = document.getElementById('qrConfirmBtn');
     btn.textContent = '✓ ยืนยันการจ่ายเงิน';
     btn.disabled = false;
@@ -734,11 +780,11 @@
     const btn = document.getElementById('qrConfirmBtn');
     btn.textContent = '⏳ กำลังส่ง...';
     btn.disabled = true;
-    const { key, plan, price } = currentOrder;
+    const { key, plan, price, displayAmount } = currentOrder;
     try {
       const res = await fetch(API_URL, {
         method: 'POST',
-        body: JSON.stringify({ key, plan, price, confirmed: true })
+        body: JSON.stringify({ key, plan, price, amount: displayAmount.toFixed(2), confirmed: true })
       });
       if (!res.ok) throw new Error('HTTP ' + res.status);
       btn.textContent = '✓ ส่งแล้ว! รอการอนุมัติ';
