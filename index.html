@@ -575,7 +575,7 @@
     if(e.target === document.getElementById('overlay')) closeModal();
   }
 
-  const API_URL = 'https://script.google.com/macros/s/AKfycbw3Y5FFO94wT8NZ-A77kHi3Un9149axJbonMusuMl1D7f7MqXhlC0MiLOThJiut40fv3w/exec';
+  const API_URL = 'https://script.google.com/macros/s/AKfycbyYoXJVwPoULdeSbM6zTA0NqyWDdNuFArLkLPviX3LkNqkBCIFaYdq5wj2nlyLfGF3iVQ/exec';
 
   async function checkKey() {
     const raw = document.getElementById('keyInput').value.trim().toUpperCase();
@@ -605,7 +605,7 @@
         document.getElementById('dlBtn').onclick = () => downloadFile(data.fileId);
       } else if (data.status === 'pending') {
         msg.classList.add('pending');
-        msg.textContent = '⏳ คีย์รอการอนุมัติ — กรุณารอ 5–10 นาทีหลังชำระเงิน แล้วตรวจสอบใหม่';
+        msg.textContent = '⏳ คีย์ได้รับการอนุมัติแล้ว! — ระบบกำลังสร้าง VPS ใช้เวลา 10-15 นาที';
       } else if (data.status === 'notfound') {
         msg.classList.add('pending');
         msg.textContent = '⏳ คีย์รอการอนุมัติ — กรุณารอ 10–15 นาทีหลังชำระเงิน แล้วตรวจสอบใหม่';
