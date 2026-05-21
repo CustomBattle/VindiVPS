@@ -86,45 +86,61 @@
 
   /* KEY CHECK */
   .key-section {
-    background: var(--surface);
-    border-bottom: 1px solid var(--border);
-    padding: 14px 0;
+    background: linear-gradient(180deg, rgba(0,212,160,0.06) 0%, rgba(0,212,160,0.02) 100%);
+    border-bottom: 1px solid rgba(0,212,160,0.2);
+    padding: 20px 0;
+    position: relative;
+  }
+  .key-section::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    box-shadow: 0 4px 32px rgba(0,212,160,0.06);
+    pointer-events: none;
   }
   .key-section .inner {
     max-width: 960px; margin: 0 auto; padding: 0 24px;
     display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
   }
   .key-label {
-    font-size: 13px; color: var(--muted);
+    font-size: 15px; color: var(--accent);
+    font-family: 'Rajdhani', sans-serif;
+    font-weight: 700; letter-spacing: 0.5px;
     white-space: nowrap;
-    display: flex; align-items: center; gap: 6px;
+    display: flex; align-items: center; gap: 8px;
+    text-shadow: 0 0 12px rgba(0,212,160,0.4);
   }
-  .key-label svg { width: 14px; height: 14px; }
+  .key-label svg { width: 18px; height: 18px; }
   .key-input {
     flex: 1; min-width: 200px;
-    background: var(--bg);
-    border: 1px solid var(--border);
+    background: rgba(0,0,0,0.4);
+    border: 1.5px solid rgba(0,212,160,0.3);
     color: var(--text);
     font-family: 'Rajdhani', monospace;
-    font-size: 15px; letter-spacing: 1px;
-    padding: 8px 14px;
-    border-radius: 6px;
+    font-size: 16px; font-weight: 600; letter-spacing: 2px;
+    padding: 11px 18px;
+    border-radius: 8px;
     outline: none;
-    transition: border-color .2s;
+    transition: border-color .2s, box-shadow .2s;
+    box-shadow: inset 0 0 0 1px transparent;
   }
-  .key-input:focus { border-color: var(--accent); }
-  .key-input::placeholder { color: var(--muted); font-size: 13px; letter-spacing: 0; }
+  .key-input:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(0,212,160,0.12), inset 0 0 12px rgba(0,212,160,0.04);
+  }
+  .key-input::placeholder { color: var(--muted); font-size: 13px; letter-spacing: 0; font-weight: 400; }
   .key-btn {
-    background: transparent;
-    border: 1px solid var(--accent);
-    color: var(--accent);
+    background: var(--accent);
+    border: none;
+    color: #000;
     font-family: 'Rajdhani', sans-serif;
-    font-size: 14px; font-weight: 600;
-    padding: 8px 20px; border-radius: 6px;
+    font-size: 15px; font-weight: 700; letter-spacing: 0.5px;
+    padding: 11px 24px; border-radius: 8px;
     cursor: pointer; transition: all .2s;
     white-space: nowrap;
+    box-shadow: 0 0 16px rgba(0,212,160,0.3);
   }
-  .key-btn:hover { background: var(--accent); color: #000; }
+  .key-btn:hover { background: #00bfae; box-shadow: 0 0 24px rgba(0,212,160,0.5); }
   .key-msg {
     width: 100%; font-size: 13px; padding: 8px 14px; border-radius: 6px; display: none;
   }
@@ -357,6 +373,113 @@
     font-size: 13px; color: var(--muted);
     position: relative; z-index: 1;
   }
+
+  .modal-warning {
+    background: rgba(255,77,109,0.08);
+    border: 1px solid rgba(255,77,109,0.35);
+    border-radius: 8px;
+    padding: 10px 14px;
+    font-size: 13px; color: var(--danger);
+    margin-bottom: 16px;
+    line-height: 1.6;
+  }
+  .btn-row {
+    display: flex; gap: 8px;
+    margin-bottom: 14px;
+  }
+  .copy-btn, .save-btn {
+    flex: 1; padding: 10px;
+    border-radius: 8px;
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 15px; font-weight: 600;
+    cursor: pointer; transition: all .2s;
+    background: rgba(0,212,160,0.1);
+    border: 1px solid var(--accent);
+    color: var(--accent);
+  }
+  .copy-btn:hover, .save-btn:hover { background: rgba(0,212,160,0.2); }
+  .copy-btn.copied { background: rgba(0,212,160,0.25); color: #fff; }
+
+  /* QR MODAL */
+  .qr-overlay {
+    display: none;
+    position: fixed; inset: 0; z-index: 300;
+    background: rgba(0,0,0,0.8);
+    backdrop-filter: blur(6px);
+    align-items: center; justify-content: center;
+    padding: 24px;
+  }
+  .qr-overlay.open { display: flex; }
+  .qr-modal {
+    background: var(--surface2);
+    border: 1px solid rgba(0,212,160,0.25);
+    border-radius: 16px;
+    padding: 28px;
+    max-width: 360px; width: 100%;
+    position: relative;
+    text-align: center;
+  }
+  .qr-modal h3 {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 20px; font-weight: 700;
+    color: var(--text); margin-bottom: 4px;
+  }
+  .qr-plan-info {
+    font-size: 13px; color: var(--accent);
+    margin-bottom: 6px;
+  }
+  .qr-key-info {
+    font-size: 12px; color: var(--muted);
+    margin-bottom: 16px;
+    font-family: 'Rajdhani', monospace;
+    letter-spacing: 1px;
+  }
+  .qr-img-wrap {
+    background: #fff;
+    border-radius: 12px;
+    padding: 12px;
+    display: inline-block;
+    margin-bottom: 16px;
+  }
+  .qr-img-wrap img { width: 200px; height: 200px; display: block; }
+  .qr-amount {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 28px; font-weight: 700;
+    color: var(--accent);
+    margin-bottom: 6px;
+  }
+  .qr-note {
+    font-size: 12px; color: var(--muted);
+    margin-bottom: 20px;
+    line-height: 1.6;
+  }
+  .qr-btn-row {
+    display: flex; gap: 10px;
+  }
+  .qr-close-btn {
+    flex: 1; padding: 12px;
+    background: none; border: 1px solid var(--border);
+    color: var(--muted); font-size: 14px; border-radius: 8px; cursor: pointer;
+    font-family: 'Rajdhani', sans-serif; font-weight: 600;
+    transition: all .2s;
+  }
+  .qr-close-btn:hover { border-color: var(--muted); color: var(--text); }
+  .qr-confirm-btn {
+    flex: 2; padding: 12px;
+    background: var(--accent); border: none;
+    color: #000; font-size: 15px; font-weight: 700; border-radius: 8px; cursor: pointer;
+    font-family: 'Rajdhani', sans-serif; letter-spacing: 0.5px;
+    transition: background .2s;
+    box-shadow: 0 0 16px rgba(0,212,160,0.3);
+  }
+  .qr-confirm-btn:hover { background: #00bfae; }
+  .qr-confirm-btn:disabled { background: var(--muted); box-shadow: none; cursor: not-allowed; }
+  .qr-modal-close {
+    position: absolute; top: 14px; right: 16px;
+    background: none; border: none; color: var(--muted);
+    font-size: 20px; cursor: pointer;
+  }
+  .qr-modal-close:hover { color: var(--text); }
 </style>
 </head>
 <body>
@@ -393,11 +516,11 @@
 <!-- HERO -->
 <div class="hero">
   <div class="container">
-    <div class="hero-tag">⚡ เร็ว · เสถียร · ราคาไม่แพง</div>
-    <h1>เช่า VPS เล่น<br><span class="hl">Vindictus</span> ลื่นกว่าเดิม</h1>
-    <p>ไม่ต้องสมัครสมาชิก เลือก plan รับคีย์ทันที จ่ายแล้วใช้ได้เลย</p>
+    <div class="hero-tag">⚡ เหมาะกับเน็ตหอที่เปิด DMZ ไม่ได้ · ราคาไม่แพง</div>
+    <h1>VPS สำหรับ <span class="hl">Vindictus</span><br>แก้เกมหลุด และโรค 1 Bar</h1>
+    <p>ไม่ต้องสมัครสมาชิก เลือก plan รับคีย์จ่ายตังค์ได้เลย</p>
     <div class="hero-note">
-      หลังจ่ายเงิน <span>รอ 5–10 นาที</span> จากนั้นนำคีย์มาตรวจสอบด้านบน
+      หลังจ่ายเงิน <span>รอ 10–15 นาที</span> ระบบ Setup VPS ให้งับ
     </div>
   </div>
 </div>
@@ -518,13 +641,20 @@
     <button class="modal-close" onclick="closeModal()">✕</button>
     <h3>รับคีย์สำเร็จ!</h3>
     <div class="modal-plan-name" id="modalPlanName">Plan: Pro — 99฿</div>
-    <div class="modal-key-label">คีย์ชั่วคราวของคุณ</div>
+    <div class="modal-key-label">คีย์ของคุณ</div>
     <div class="modal-key" id="modalKey">VINDI-XXXX-XXXX</div>
-    <div class="modal-info">
-      <strong>วิธีจ่ายเงิน:</strong> กดปุ่มด้านล่าง → นำคีย์ด้านบนไปใส่ในช่อง Easydonate → ชำระเงิน<br><br>
-      หลังจ่ายแล้ว <strong>รอ 5–10 นาที</strong> จากนั้นนำคีย์ไปตรวจสอบที่แถบด้านบนของเว็บได้เลย
+    <div class="btn-row">
+      <button class="copy-btn" id="copyBtn" onclick="copyKey()">📋 คัดลอกคีย์</button>
+      <button class="save-btn" onclick="saveKey()">💾 บันทึกคีย์</button>
     </div>
-    <a class="donate-btn" href="https://easydonate.ru" target="_blank">💳 จ่ายเงินผ่าน Easydonate</a>
+    <div class="modal-info">
+      <strong>วิธีจ่ายเงิน:</strong> คัดลอกคีย์เก็บไว้ก่อน → และกดปุ่ม จ่ายเงิน<br><br>
+      หลังจ่ายแล้ว → ให้นำคีย์ไปตรวจสอบที่แถบด้านบนของเว็บ
+    </div>
+    <div class="modal-warning">
+      ⚠ <strong>คำเตือน:</strong><br>คัดลอกหรือบันทึกคีย์เก็บไว้ก่อนปิดหน้าต่าง! คีย์จะไม่ส่งซ้ำ
+    </div>
+    <button class="donate-btn" onclick="openQR()">📱 จ่ายเงินพร้อมเพย์</button>
     <button class="cancel-btn" onclick="closeModal()">ปิด</button>
   </div>
 </div>
@@ -542,6 +672,9 @@
     return 'VINDI-' + seg(4) + '-' + seg(4);
   }
 
+  // เก็บ state ของ order ปัจจุบัน
+  let currentOrder = { key: '', plan: '', price: '', amount: 0 };
+
   function selectPlan(n, name, price) {
     [1,2,3].forEach(i => {
       const b = document.getElementById('btn'+i);
@@ -556,15 +689,63 @@
     btn.textContent = '✓ เลือกแล้ว';
 
     const key = randomKey();
+    const amount = parseInt(price.replace(/[^0-9]/g, ''));
+
+    // เก็บไว้ใช้ตอนเปิด QR และ confirm
+    currentOrder = { key, plan: name, price, amount };
+
     document.getElementById('modalPlanName').textContent = 'Plan: ' + name + ' — ' + price;
     document.getElementById('modalKey').textContent = key;
     document.getElementById('overlay').classList.add('open');
+  }
 
-    // บันทึกลง Google Sheets orders
-    fetch(API_URL, {
-      method: 'POST',
-      body: JSON.stringify({ key, plan: name, price })
-    }).catch(() => {}); // ไม่ต้องรอผล ไม่กระทบ UX
+  function openQR() {
+    const { key, plan, price, amount } = currentOrder;
+    const phone = '0648354216';
+
+    // สร้าง QR พร้อมเพย์ผ่าน promptpay.io
+    const phoneFormatted = '66' + phone.substring(1); // 0648... → 66648...
+    const qrUrl = `https://promptpay.io/${phoneFormatted}/${amount}.png`;
+
+    document.getElementById('qrImg').src = qrUrl;
+    document.getElementById('qrPlanInfo').textContent = plan + ' — ' + price;
+    document.getElementById('qrKeyInfo').textContent = 'Key: ' + key;
+    document.getElementById('qrAmount').textContent = amount + ' บาท';
+
+    const btn = document.getElementById('qrConfirmBtn');
+    btn.textContent = '✓ ยืนยันการจ่ายเงิน';
+    btn.disabled = false;
+
+    document.getElementById('qrOverlay').classList.add('open');
+  }
+
+  function closeQR() {
+    document.getElementById('qrOverlay').classList.remove('open');
+  }
+
+  function closeQRIfOutside(e) {
+    if (e.target === document.getElementById('qrOverlay')) closeQR();
+  }
+
+  async function confirmPayment() {
+    const btn = document.getElementById('qrConfirmBtn');
+    btn.textContent = '⏳ กำลังส่ง...';
+    btn.disabled = true;
+
+    const { key, plan, price } = currentOrder;
+
+    try {
+      await fetch(API_URL, {
+        method: 'POST',
+        body: JSON.stringify({ key, plan, price, confirmed: true })
+      });
+    } catch(e) {}
+
+    btn.textContent = '✓ ส่งแล้ว! รอการอนุมัติ';
+    setTimeout(() => {
+      closeQR();
+      closeModal();
+    }, 1500);
   }
 
   function closeModal() {
@@ -575,7 +756,7 @@
     if(e.target === document.getElementById('overlay')) closeModal();
   }
 
-  const API_URL = 'https://script.google.com/macros/s/AKfycbz-062EJRiZZK3BiH4IfUGfAkVPzKqSLT-E6_LYZdN0ZHFWYkjGTre1nR8cCVS9ewTKEQ/exec';
+  const API_URL = 'https://script.google.com/macros/s/AKfycbzQyf2MwjxFSJhJk0vdfS0dEm1vMgTpRVdRSsj5n1w4XaZNQ0v7otpCsqYxRHc9ReOwag/exec';
 
   async function checkKey() {
     const raw = document.getElementById('keyInput').value.trim().toUpperCase();
@@ -662,6 +843,60 @@
     }
     this.value = out.slice(0,19);
   });
+
+  function copyKey() {
+    const key = document.getElementById('modalKey').textContent;
+    navigator.clipboard.writeText(key).then(() => {
+      const btn = document.getElementById('copyBtn');
+      btn.textContent = '✓ คัดลอกแล้ว!';
+      btn.classList.add('copied');
+      setTimeout(() => {
+        btn.textContent = '📋 คัดลอก';
+        btn.classList.remove('copied');
+      }, 2000);
+    });
+  }
+
+  function saveKey() {
+    const key = document.getElementById('modalKey').textContent;
+    const content = `นี่คือคีย์ของคุณ
+Key: ${key}
+
+หลังจากจ่ายเงินแล้ว นำคีย์นี้ไปตรวจสอบด้านบนของเว็บ
+ระบบจะสร้าง VPS ให้คุณประมาณ 10-15 นาที`;
+    const blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = key + '.txt';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  }
 </script>
+
+<!-- QR MODAL -->
+<div class="qr-overlay" id="qrOverlay" onclick="closeQRIfOutside(event)">
+  <div class="qr-modal">
+    <button class="qr-modal-close" onclick="closeQR()">✕</button>
+    <h3>สแกนจ่ายเงิน</h3>
+    <div class="qr-plan-info" id="qrPlanInfo">Pro — 99฿</div>
+    <div class="qr-key-info" id="qrKeyInfo">Key: VINDI-XXXX-XXXX</div>
+    <div class="qr-img-wrap">
+      <img id="qrImg" src="" alt="QR PromptPay" />
+    </div>
+    <div class="qr-amount" id="qrAmount">99 บาท</div>
+    <div class="qr-note">
+      สแกน QR ด้วยแอพธนาคารของคุณ<br>
+      หลังโอนแล้วกดปุ่ม "ยืนยันการจ่ายเงิน"
+    </div>
+    <div class="qr-btn-row">
+      <button class="qr-close-btn" onclick="closeQR()">ปิด</button>
+      <button class="qr-confirm-btn" id="qrConfirmBtn" onclick="confirmPayment()">✓ ยืนยันการจ่ายเงิน</button>
+    </div>
+  </div>
+</div>
+
 </body>
 </html>
