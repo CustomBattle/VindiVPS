@@ -521,6 +521,11 @@
   }
   .copy-confirm-skip-btn:hover { border-color: var(--muted); color: var(--text); }
 
+  .yt-label {
+    font-size: 20px;
+    letter-spacing: 5px;
+  }
+
   /* YOUTUBE SECTION */
   .yt-section { padding: 20px 0 60px; position: relative; z-index: 1; }
   .yt-wrap {
@@ -538,8 +543,10 @@
   .yt-frame-wrap {
     width: 100%; aspect-ratio: 16/9;
     border-radius: 12px; overflow: hidden;
-    border: 1px solid rgba(0,212,160,0.18);
-    box-shadow: 0 0 32px rgba(0,212,160,0.08), 0 8px 40px rgba(0,0,0,0.5);
+    border: 1px solid rgba(0,212,160,0.35);
+    box-shadow:
+      0 0 16px rgba(0,212,160,0.15),
+      0 8px 40px rgba(0,0,0,0.5);
   }
   .yt-frame-wrap iframe { width: 100%; height: 100%; display: block; }
   .yt-caption {
@@ -722,7 +729,7 @@
 <!-- YOUTUBE SECTION -->
 <div class="yt-section">
   <div class="container">
-    <div class="section-label">&#x2014; &#x0E27;&#x0E34;&#x0E18;&#x0E35;&#x0E17;&#x0E33; &#x2014;</div>
+    <div class="section-label yt-label">&#x2014; &#x0E27;&#x0E34;&#x0E18;&#x0E35;&#x0E17;&#x0E33; &#x2014;</div>
     <div class="yt-wrap">
       <div class="yt-glow-ring"></div>
       <div class="yt-badge">&#x1F4FA; &#x0E04;&#x0E25;&#x0E34;&#x0E1B;&#x0E41;&#x0E19;&#x0E30;&#x0E19;&#x0E33;</div>
