@@ -697,10 +697,17 @@
     btn.disabled = true;
     const { key, plan, price } = currentOrder;
     try {
-      await fetch(API_URL, { method: 'POST', body: JSON.stringify({ key, plan, price, confirmed: true }) });
-    } catch(e) {}
-    btn.textContent = '✓ ส่งแล้ว! รอการอนุมัติ';
-    setTimeout(() => { closeQR(); closeModal(); }, 1500);
+      const res = await fetch(API_URL, {
+        method: 'POST',
+        body: JSON.stringify({ key, plan, price, confirmed: true })
+      });
+      if (!res.ok) throw new Error('HTTP ' + res.status);
+      btn.textContent = '✓ ส่งแล้ว! รอการอนุมัติ';
+      setTimeout(() => { closeQR(); closeModal(); }, 1500);
+    } catch(err) {
+      btn.textContent = '✕ ส่งไม่สำเร็จ ลองใหม่';
+      btn.disabled = false;
+    }
   }
 
   function closeModal() {
@@ -711,7 +718,7 @@
     if(e.target === document.getElementById('overlay')) closeModal();
   }
 
-  const API_URL = 'https://script.google.com/macros/s/AKfycbzu9EGZe6f9CZWuwmhkMWWp0qkdca_r09g_ZdqBeZaqz4qET61uP_xPIXjJhRXxh_U_tA/exec';
+  const API_URL = 'https://script.google.com/macros/s/AKfycbwTSBcfTd1kLEMM8WBSomzaGnE0GjZt1J6tdOCJ6LZ15FALCpC4kSxOgaplID_wxqS6cw/exec';
 
   async function checkKey() {
     const raw = document.getElementById('keyInput').value.trim().toUpperCase();
