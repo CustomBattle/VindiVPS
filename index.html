@@ -627,6 +627,66 @@
   }
   .copy-confirm-skip-btn:hover { border-color: var(--muted); color: var(--text); }
 
+  /* Password popup */
+  .pw-overlay {
+    display: none; position: fixed; inset: 0; z-index: 500;
+    background: rgba(0,0,0,0.8); backdrop-filter: blur(6px);
+    align-items: center; justify-content: center; padding: 24px;
+  }
+  .pw-overlay.open { display: flex; }
+  .pw-modal {
+    background: var(--surface2);
+    border: 1px solid rgba(0,212,160,0.3);
+    border-radius: 16px; padding: 32px 28px;
+    max-width: 380px; width: 100%;
+    text-align: center; position: relative;
+    animation: modal-in 0.22s cubic-bezier(0.34,1.4,0.64,1) both;
+  }
+  .pw-icon { font-size: 44px; margin-bottom: 12px; line-height: 1; }
+  .pw-modal h3 {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 20px; font-weight: 700;
+    color: var(--text); margin-bottom: 6px;
+  }
+  .pw-sub { font-size: 13px; color: var(--muted); margin-bottom: 16px; line-height: 1.6; }
+  .pw-key-box {
+    background: var(--bg);
+    border: 1px dashed var(--accent);
+    border-radius: 8px;
+    padding: 12px 16px;
+    font-family: 'Rajdhani', monospace;
+    font-size: 22px; font-weight: 700; letter-spacing: 3px;
+    color: var(--accent);
+    margin-bottom: 8px;
+    position: relative; overflow: hidden;
+  }
+  .pw-key-box::after {
+    content: '';
+    position: absolute; top: 0; left: -60%; width: 60%; height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(0,212,160,0.15), transparent);
+    animation: scan-sweep 2s ease-in-out infinite;
+  }
+  .pw-note { font-size: 12px; color: var(--muted); margin-bottom: 20px; }
+  .pw-btn-row { display: flex; gap: 8px; }
+  .pw-copy-btn {
+    flex: 1; padding: 10px;
+    background: var(--accent); border: none; color: #000;
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 15px; font-weight: 700; letter-spacing: 0.5px;
+    border-radius: 8px; cursor: pointer;
+    box-shadow: 0 0 14px rgba(0,212,160,0.3);
+    transition: background .2s;
+  }
+  .pw-copy-btn:hover { background: #00bfae; }
+  .pw-close-btn {
+    flex: 1; padding: 10px;
+    background: none; border: 1px solid var(--border);
+    color: var(--muted); font-size: 13px;
+    font-family: 'Rajdhani', sans-serif; font-weight: 600;
+    border-radius: 8px; cursor: pointer; transition: all .2s;
+  }
+  .pw-close-btn:hover { border-color: var(--muted); color: var(--text); }
+
   .yt-label {
     font-size: 20px;
     letter-spacing: 5px;
@@ -763,12 +823,14 @@
   }
   .overlay.closing,
   .qr-overlay.closing,
-  .copy-confirm-overlay.closing {
+  .copy-confirm-overlay.closing,
+  .pw-overlay.closing {
     animation: overlay-out 0.18s ease forwards;
   }
   .overlay.closing .modal,
   .qr-overlay.closing .qr-modal,
-  .copy-confirm-overlay.closing .copy-confirm-modal {
+  .copy-confirm-overlay.closing .copy-confirm-modal,
+  .pw-overlay.closing .pw-modal {
     animation: modal-out 0.18s ease forwards;
   }
 
@@ -1265,8 +1327,7 @@
 
   async function downloadFile(fileId) {
     const btn = document.getElementById('dlBtn');
-    btn.textContent = '⏳ กำลังดาวน์โหลด...';
-    btn.disabled = true;
+    setLoading(btn, 'กำลังดาวน์โหลด...', true);
     try {
       const res  = await fetch(API_URL + '?download=' + encodeURIComponent(fileId));
       const json = await res.json();
@@ -1285,11 +1346,35 @@
       a.click();
       document.body.removeChild(a);
       URL.revokeObjectURL(url);
-      btn.textContent = '✓ ดาวน์โหลดแล้ว';
+      clearLoading(btn, '✓ ดาวน์โหลดแล้ว');
+      // Show password popup
+      const key = document.getElementById('keyInput').value.trim().toUpperCase();
+      document.getElementById('pwKeyDisplay').textContent = key;
+      document.getElementById('pwOverlay').classList.add('open');
     } catch(err) {
-      btn.textContent = '⬇ ดาวน์โหลดไฟล์ VindiVPS';
+      clearLoading(btn, '⬇ ดาวน์โหลดไฟล์ VindiVPS');
       btn.disabled = false;
     }
+  }
+
+  function closePwOverlay() {
+    const el = document.getElementById('pwOverlay');
+    el.classList.add('closing');
+    setTimeout(() => el.classList.remove('open', 'closing'), 180);
+  }
+
+  function copyPassword() {
+    const key = document.getElementById('pwKeyDisplay').textContent;
+    const btn = document.getElementById('pwCopyBtn');
+    try { navigator.clipboard.writeText(key); } catch(e) {
+      const ta = document.createElement('textarea');
+      ta.value = key; ta.style.cssText = 'position:fixed;top:0;opacity:0;';
+      document.body.appendChild(ta); ta.focus(); ta.select();
+      try { document.execCommand('copy'); } catch(e2) {}
+      document.body.removeChild(ta);
+    }
+    btn.textContent = '✓ คัดลอกแล้ว!';
+    setTimeout(() => { btn.textContent = '📋 คัดลอกรหัส'; }, 2000);
   }
 
   document.getElementById('keyInput').addEventListener('keydown', e => {
@@ -1392,6 +1477,21 @@ Key: ${key}
   </div>
 </div>
 
+
+<!-- PASSWORD POPUP -->
+<div class="pw-overlay" id="pwOverlay">
+  <div class="pw-modal">
+    <div class="pw-icon">🔐</div>
+    <h3>รหัสแตกไฟล์ ZIP</h3>
+    <div class="pw-sub">ใช้รหัสนี้เพื่อแตกไฟล์ที่ดาวน์โหลดมา</div>
+    <div class="pw-key-box" id="pwKeyDisplay">VINDI-XXXX-XXXX</div>
+    <div class="pw-note">รหัส = คีย์ที่คุณได้รับ</div>
+    <div class="pw-btn-row">
+      <button class="pw-copy-btn" id="pwCopyBtn" onclick="copyPassword()">📋 คัดลอกรหัส</button>
+      <button class="pw-close-btn" onclick="closePwOverlay()">ปิด</button>
+    </div>
+  </div>
+</div>
 
 <script>
 // ===== RIPPLE =====
