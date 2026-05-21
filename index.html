@@ -19,6 +19,7 @@
     --danger: #ff4d6d;
   }
 
+  html { scroll-behavior: smooth; }
   * { box-sizing: border-box; margin: 0; padding: 0; }
 
   body {
@@ -553,6 +554,118 @@
     margin-top: 12px;
     font-size: 13px; color: var(--muted); text-align: center; letter-spacing: 0.2px;
   }
+
+  /* ========== ANIMATIONS ========== */
+
+  /* Ripple */
+  .ripple-btn { position: relative; overflow: hidden; }
+  .ripple-btn::after {
+    content: '';
+    position: absolute;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.18);
+    width: 0; height: 0;
+    top: 50%; left: 50%;
+    transform: translate(-50%,-50%) scale(0);
+    transition: width 0.45s ease, height 0.45s ease, opacity 0.45s ease;
+    opacity: 0;
+    pointer-events: none;
+  }
+  .ripple-btn.rippling::after {
+    width: 300px; height: 300px;
+    opacity: 0;
+    transform: translate(-50%,-50%) scale(1);
+  }
+
+  /* Loading spinner inline */
+  .btn-spinner {
+    display: inline-block;
+    width: 14px; height: 14px;
+    border: 2px solid rgba(0,0,0,0.2);
+    border-top-color: #000;
+    border-radius: 50%;
+    animation: spin 0.65s linear infinite;
+    vertical-align: middle;
+    margin-right: 6px;
+  }
+  .btn-spinner.light {
+    border-color: rgba(255,255,255,0.2);
+    border-top-color: rgba(255,255,255,0.85);
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* Pulse on loading state */
+  @keyframes pulse-opacity {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.6; }
+  }
+  .btn-loading { animation: pulse-opacity 1.2s ease infinite; }
+
+  /* Modal fade+scale in */
+  @keyframes modal-in {
+    from { opacity: 0; transform: scale(0.93) translateY(10px); }
+    to   { opacity: 1; transform: scale(1) translateY(0); }
+  }
+  .overlay.open .modal,
+  .qr-overlay.open .qr-modal,
+  .copy-confirm-overlay.open .copy-confirm-modal {
+    animation: modal-in 0.22s cubic-bezier(0.34,1.4,0.64,1) both;
+  }
+
+  /* Scroll reveal */
+  .reveal {
+    opacity: 0;
+    transform: translateY(28px);
+    transition: opacity 0.55s ease, transform 0.55s ease;
+  }
+  .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* Plan card hover lift */
+  .plan-card {
+    transition: border-color .25s, transform .25s, box-shadow .25s;
+  }
+  .plan-card:hover {
+    box-shadow: 0 8px 32px rgba(0,212,160,0.1);
+  }
+
+  /* Key box flash on copy */
+  @keyframes flash-green {
+    0%   { box-shadow: 0 0 0 0 rgba(0,212,160,0.6); }
+    50%  { box-shadow: 0 0 0 8px rgba(0,212,160,0); }
+    100% { box-shadow: 0 0 0 0 rgba(0,212,160,0); }
+  }
+  .flash-copy { animation: flash-green 0.5s ease; }
+
+  /* Checkmark bounce */
+  @keyframes bounce-in {
+    0%   { transform: scale(0.5); opacity: 0; }
+    60%  { transform: scale(1.15); }
+    100% { transform: scale(1); opacity: 1; }
+  }
+  .copy-confirm-icon { animation: bounce-in 0.4s cubic-bezier(0.34,1.5,0.64,1) both; }
+
+  /* Modal close animation */
+  @keyframes modal-out {
+    from { opacity: 1; transform: scale(1) translateY(0); }
+    to   { opacity: 0; transform: scale(0.93) translateY(10px); }
+  }
+  @keyframes overlay-out {
+    from { opacity: 1; }
+    to   { opacity: 0; }
+  }
+  .overlay.closing,
+  .qr-overlay.closing,
+  .copy-confirm-overlay.closing {
+    animation: overlay-out 0.18s ease forwards;
+  }
+  .overlay.closing .modal,
+  .qr-overlay.closing .qr-modal,
+  .copy-confirm-overlay.closing .copy-confirm-modal {
+    animation: modal-out 0.18s ease forwards;
+  }
 </style>
 </head>
 <body>
@@ -875,7 +988,16 @@
     document.getElementById('qrOverlay').classList.add('open');
   }
 
-  function closeQR() { document.getElementById('qrOverlay').classList.remove('open'); }
+  function animateClose(overlayId, cb) {
+    const el = document.getElementById(overlayId);
+    el.classList.add('closing');
+    setTimeout(() => {
+      el.classList.remove('open', 'closing');
+      if (cb) cb();
+    }, 180);
+  }
+
+  function closeQR() { animateClose('qrOverlay'); }
   function closeQRIfOutside(e) { if (e.target === document.getElementById('qrOverlay')) closeQR(); }
 
   async function confirmPayment() {
@@ -903,8 +1025,7 @@
   }
 
   function closeCopyConfirm() {
-    document.getElementById('copyConfirmOverlay').classList.remove('open');
-    closeModal();
+    animateClose('copyConfirmOverlay', () => animateClose('overlay'));
   }
 
   function copyAndClose() {
@@ -925,9 +1046,7 @@
     setTimeout(() => closeCopyConfirm(), 900);
   }
 
-  function closeModal() {
-    document.getElementById('overlay').classList.remove('open');
-  }
+  function closeModal() { animateClose('overlay'); }
 
   function closeIfOutside(e) {
     if(e.target === document.getElementById('overlay')) closeModal();
@@ -1086,6 +1205,123 @@ Key: ${key}
     </div>
   </div>
 </div>
+
+
+<script>
+// ===== RIPPLE =====
+function addRipple(el) {
+  el.classList.add('ripple-btn');
+  el.addEventListener('click', function() {
+    this.classList.remove('rippling');
+    void this.offsetWidth;
+    this.classList.add('rippling');
+    setTimeout(() => this.classList.remove('rippling'), 500);
+  });
+}
+document.querySelectorAll('.plan-btn, .key-btn, .donate-btn, .qr-confirm-btn, .qr-close-btn, .copy-confirm-copy-btn, .copy-confirm-skip-btn, .cancel-btn, .copy-btn, .save-btn').forEach(addRipple);
+
+// ===== SCROLL REVEAL =====
+const revealEls = document.querySelectorAll('.plan-card, .hero, .key-section, .yt-wrap, .section-label, .yt-badge, .yt-frame-wrap, .yt-caption');
+revealEls.forEach(el => el.classList.add('reveal'));
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach((e, i) => {
+    if (e.isIntersecting) {
+      setTimeout(() => e.target.classList.add('visible'), 60 * i);
+      observer.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.12 });
+revealEls.forEach(el => observer.observe(el));
+
+// ===== SPINNER HELPERS =====
+function setLoading(btn, text, light = false) {
+  btn.disabled = true;
+  btn.classList.add('btn-loading');
+  btn.innerHTML = '<span class="btn-spinner' + (light ? ' light' : '') + '"></span>' + text;
+}
+function clearLoading(btn, text) {
+  btn.disabled = false;
+  btn.classList.remove('btn-loading');
+  btn.textContent = text;
+}
+
+// ===== PATCH: checkKey with spinner =====
+const origCheckKey = window.checkKey;
+window.checkKey = async function() {
+  const btn = document.querySelector('.key-btn');
+  setLoading(btn, 'กำลังตรวจสอบ...', true);
+  await origCheckKey();
+  clearLoading(btn, 'ตรวจสอบ');
+};
+
+// ===== PATCH: confirmPayment with spinner =====
+const origConfirm = window.confirmPayment;
+window.confirmPayment = async function() {
+  const btn = document.getElementById('qrConfirmBtn');
+  setLoading(btn, 'กำลังส่ง...');
+  try {
+    await origConfirm();
+  } catch(e) {}
+};
+
+// ===== FLASH copy key box =====
+const origCopyAndClose = window.copyAndClose;
+window.copyAndClose = function() {
+  const box = document.getElementById('copyConfirmKey');
+  box.classList.remove('flash-copy');
+  void box.offsetWidth;
+  box.classList.add('flash-copy');
+  setTimeout(() => box.classList.remove('flash-copy'), 600);
+  origCopyAndClose();
+};
+</script>
+
+
+<script>
+// ===== SMOOTH INERTIA SCROLL =====
+(function() {
+  let target = window.scrollY;
+  let current = window.scrollY;
+  let rafId = null;
+  const ease = 0.09;
+
+  function lerp(a, b, t) { return a + (b - a) * t; }
+
+  function getMaxScroll() {
+    return Math.max(0, document.documentElement.scrollHeight - window.innerHeight);
+  }
+
+  function tick() {
+    current = lerp(current, target, ease);
+    const diff = Math.abs(target - current);
+    if (diff < 0.5) {
+      current = target;
+      window.scrollTo(0, current);
+      rafId = null;
+      return;
+    }
+    window.scrollTo(0, current);
+    rafId = requestAnimationFrame(tick);
+  }
+
+  window.addEventListener('wheel', function(e) {
+    e.preventDefault();
+    // sync target กับ scroll จริงก่อนทุกครั้ง ป้องกันติด
+    if (!rafId) {
+      target = window.scrollY;
+      current = window.scrollY;
+    }
+    target += e.deltaY * 1.2;
+    target = Math.max(0, Math.min(target, getMaxScroll()));
+    if (!rafId) rafId = requestAnimationFrame(tick);
+  }, { passive: false });
+
+  // sync เมื่อ resize หน้าจอ
+  window.addEventListener('resize', () => {
+    target = Math.min(target, getMaxScroll());
+  });
+})();
+</script>
 
 </body>
 </html>
