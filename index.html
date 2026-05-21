@@ -467,6 +467,92 @@
   .qr-confirm-btn:disabled { background: var(--muted); box-shadow: none; cursor: not-allowed; }
   .qr-modal-close { position: absolute; top: 14px; right: 16px; background: none; border: none; color: var(--muted); font-size: 20px; cursor: pointer; }
   .qr-modal-close:hover { color: var(--text); }
+
+  /* COPY CONFIRM OVERLAY */
+  .copy-confirm-overlay {
+    display: none; position: fixed; inset: 0; z-index: 400;
+    background: rgba(0,0,0,0.75); backdrop-filter: blur(6px);
+    align-items: center; justify-content: center; padding: 24px;
+  }
+  .copy-confirm-overlay.open { display: flex; }
+  .copy-confirm-modal {
+    background: var(--surface2);
+    border: 1px solid rgba(255,77,109,0.35);
+    border-radius: 16px; padding: 32px 28px;
+    max-width: 380px; width: 100%;
+    text-align: center; position: relative;
+  }
+  .copy-confirm-icon { font-size: 48px; margin-bottom: 14px; line-height: 1; }
+  .copy-confirm-modal h3 {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 22px; font-weight: 700;
+    color: var(--danger); margin-bottom: 8px;
+  }
+  .copy-confirm-key {
+    background: var(--bg);
+    border: 1px dashed var(--accent);
+    border-radius: 8px;
+    padding: 12px 16px;
+    font-family: 'Rajdhani', monospace;
+    font-size: 20px; font-weight: 700; letter-spacing: 3px;
+    color: var(--accent);
+    margin: 14px 0 8px;
+  }
+  .copy-confirm-sub {
+    font-size: 13px; color: #8a93a6; margin-bottom: 22px; line-height: 1.6;
+  }
+  .copy-confirm-btn-row { display: flex; gap: 8px; }
+  .copy-confirm-copy-btn {
+    flex: 1; padding: 9px 10px;
+    background: var(--accent); border: none; color: #000;
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 14px; font-weight: 700; letter-spacing: 0.5px;
+    border-radius: 8px; cursor: pointer;
+    box-shadow: 0 0 14px rgba(0,212,160,0.3);
+    transition: background .2s; white-space: nowrap;
+  }
+  .copy-confirm-copy-btn:hover { background: #00bfae; }
+  .copy-confirm-skip-btn {
+    flex: 1; padding: 9px 10px;
+    background: none; border: 1px solid var(--border);
+    color: var(--muted); font-size: 13px;
+    font-family: 'Rajdhani', sans-serif; font-weight: 600;
+    border-radius: 8px; cursor: pointer; transition: all .2s; white-space: nowrap;
+  }
+  .copy-confirm-skip-btn:hover { border-color: var(--muted); color: var(--text); }
+
+  /* YOUTUBE SECTION */
+  .yt-section { padding: 20px 0 60px; position: relative; z-index: 1; }
+  .yt-wrap {
+    position: relative; max-width: 680px; margin: 0 auto;
+    background: var(--surface); border: 1px solid rgba(0,212,160,0.2);
+    border-radius: 16px; padding: 28px 28px 22px;
+    box-shadow: 0 0 0 1px rgba(0,212,160,0.08), 0 0 40px rgba(0,212,160,0.07), 0 8px 32px rgba(0,0,0,0.4);
+  }
+  .yt-glow-ring {
+    position: absolute; inset: -1px; border-radius: 16px;
+    background: linear-gradient(135deg, rgba(0,212,160,0.25), rgba(0,153,255,0.15), transparent 60%);
+    z-index: 0; pointer-events: none;
+  }
+  .yt-badge {
+    position: relative; z-index: 1;
+    display: inline-flex; align-items: center; gap: 6px;
+    background: rgba(0,212,160,0.1); border: 1px solid rgba(0,212,160,0.25);
+    color: var(--accent); font-family: 'Rajdhani', sans-serif;
+    font-size: 12px; font-weight: 700; letter-spacing: 1px;
+    padding: 4px 14px; border-radius: 20px; margin-bottom: 16px;
+    text-shadow: 0 0 10px rgba(0,212,160,0.5);
+  }
+  .yt-frame-wrap {
+    position: relative; z-index: 1; width: 100%; aspect-ratio: 16/9;
+    border-radius: 10px; overflow: hidden;
+    border: 1px solid rgba(0,212,160,0.15); box-shadow: 0 0 24px rgba(0,0,0,0.5);
+  }
+  .yt-frame-wrap iframe { width: 100%; height: 100%; display: block; }
+  .yt-caption {
+    position: relative; z-index: 1; margin-top: 14px;
+    font-size: 13px; color: var(--muted); text-align: center; letter-spacing: 0.2px;
+  }
 </style>
 </head>
 <body>
@@ -634,11 +720,27 @@
       <strong>วิธีจ่ายเงิน:</strong> คัดลอกคีย์เก็บไว้ก่อน → และกดปุ่ม จ่ายเงิน<br><br>
       หลังจ่ายแล้ว → ให้นำคีย์ไปตรวจสอบที่แถบด้านบนของเว็บ
     </div>
-    <div class="modal-warning">
-      ⚠ <strong>คำเตือน:</strong><br>คัดลอกหรือบันทึกคีย์เก็บไว้ก่อนปิดหน้าต่าง! คีย์จะไม่ส่งซ้ำ
-    </div>
+
     <button class="donate-btn" onclick="openQR()">📱 จ่ายเงินพร้อมเพย์</button>
     <button class="cancel-btn" onclick="closeModal()">ปิด</button>
+  </div>
+</div>
+
+<!-- YOUTUBE SECTION -->
+<div class="yt-section">
+  <div class="container">
+    <div class="section-label">&#x2014; &#x0E27;&#x0E34;&#x0E18;&#x0E35;&#x0E17;&#x0E33; &#x2014;</div>
+    <div class="yt-wrap">
+      <div class="yt-glow-ring"></div>
+      <div class="yt-badge">&#x1F4FA; &#x0E04;&#x0E25;&#x0E34;&#x0E1B;&#x0E41;&#x0E19;&#x0E30;&#x0E19;&#x0E33;</div>
+      <div class="yt-frame-wrap">
+        <iframe src="https://www.youtube.com/embed/zA8TJZu7Cz4"
+          title="VindiVPS Tutorial" frameborder="0"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          allowfullscreen></iframe>
+      </div>
+      <div class="yt-caption">&#x0E14;&#x0E39;&#x0E04;&#x0E25;&#x0E34;&#x0E1B;&#x0E19;&#x0E35;&#x0E49;&#x0E40;&#x0E1E;&#x0E37;&#x0E48;&#x0E2D;&#x0E40;&#x0E23;&#x0E34;&#x0E48;&#x0E21;&#x0E15;&#x0E49;&#x0E19;&#x0E43;&#x0E0A;&#x0E49;&#x0E07;&#x0E32;&#x0E19; VindiVPS &#x0E44;&#x0E14;&#x0E49;&#x0E40;&#x0E25;&#x0E22;</div>
+    </div>
   </div>
 </div>
 
@@ -788,11 +890,39 @@
       });
       if (!res.ok) throw new Error('HTTP ' + res.status);
       btn.textContent = '✓ ส่งแล้ว! รอการอนุมัติ';
-      setTimeout(() => { closeQR(); closeModal(); }, 1500);
+      // confirm สำเร็จแล้ว → ค่อยเด้งเตือนให้คัดลอกคีย์
+      setTimeout(() => {
+        closeQR();
+        document.getElementById('copyConfirmKey').textContent = key;
+        document.getElementById('copyConfirmOverlay').classList.add('open');
+      }, 1200);
     } catch(err) {
       btn.textContent = '✕ ส่งไม่สำเร็จ ลองใหม่';
       btn.disabled = false;
     }
+  }
+
+  function closeCopyConfirm() {
+    document.getElementById('copyConfirmOverlay').classList.remove('open');
+    closeModal();
+  }
+
+  function copyAndClose() {
+    const key = document.getElementById('copyConfirmKey').textContent;
+    try {
+      navigator.clipboard.writeText(key);
+    } catch(e) {
+      const ta = document.createElement('textarea');
+      ta.value = key;
+      ta.style.cssText = 'position:fixed;top:0;opacity:0;';
+      document.body.appendChild(ta);
+      ta.focus(); ta.select();
+      try { document.execCommand('copy'); } catch(e2) {}
+      document.body.removeChild(ta);
+    }
+    const btn = document.getElementById('copyConfirmCopyBtn');
+    btn.textContent = '✓ คัดลอกแล้ว!';
+    setTimeout(() => closeCopyConfirm(), 900);
   }
 
   function closeModal() {
@@ -935,6 +1065,24 @@ Key: ${key}
     <div class="qr-btn-row">
       <button class="qr-close-btn" onclick="closeQR()">ปิด</button>
       <button class="qr-confirm-btn" id="qrConfirmBtn" onclick="confirmPayment()">✓ ยืนยันการจ่ายเงิน</button>
+    </div>
+  </div>
+</div>
+
+
+<!-- COPY REMIND AFTER PAYMENT -->
+<div class="copy-confirm-overlay" id="copyConfirmOverlay">
+  <div class="copy-confirm-modal">
+    <div class="copy-confirm-icon">✅</div>
+    <h3>สำเร็จ! รอการอนุมัติ</h3>
+    <div style="font-size:13px;margin-bottom:4px;font-family:Rajdhani,sans-serif;font-weight:600;letter-spacing:0.5px;background:linear-gradient(90deg,#f0b429,#ff8c42);-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 0 5px rgba(240,140,40,0.45));">อย่าลืมเก็บคีย์ของคุณไว้นะ</div>
+    <div class="copy-confirm-key" id="copyConfirmKey">VINDI-XXXX-XXXX</div>
+    <div class="copy-confirm-sub">
+      คีย์จะไม่ส่งซ้ำ — กดคัดลอกเก็บไว้<br>แล้วนำไปตรวจสอบด้านบนของเว็บ
+    </div>
+    <div class="copy-confirm-btn-row">
+      <button class="copy-confirm-copy-btn" id="copyConfirmCopyBtn" onclick="copyAndClose()">📋 คัดลอก</button>
+      <button class="copy-confirm-skip-btn" onclick="closeCopyConfirm()">ฉันบันทึกไว้แล้ว</button>
     </div>
   </div>
 </div>
