@@ -4,12 +4,12 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta property="og:type" content="website">
-<meta property="og:title" content="VindiVPS — VPS สำหรับ Vindictus">
-<meta property="og:description" content="แก้โรค 1 Bar อาการหลุด">
+<meta property="og:title" content="VindiVPS — เช่า VPS สำหรับ Vindictus">
+<meta property="og:description" content="ไม่ต้องสมัครสมาชิก เลือก plan รับคีย์จ่ายตังค์ได้เลย แก้โรค 1 Bar อาการหลุด ราคาไม่แพง">
 <meta property="og:url" content="https://nutforgaming.github.io/VindiVPS/">
 <meta name="theme-color" content="#00d4a0">
-<meta name="description" content="ไม่ต้องสมัครสมาชิก เลือก plan ได้เลย">
-<title>VindiVPS — VPS สำหรับ Vindictus</title>
+<meta name="description" content="ไม่ต้องสมัครสมาชิก เลือก plan รับคีย์จ่ายตังค์ได้เลย แก้โรค 1 Bar อาการหลุด ราคาไม่แพง">
+<title>VindiVPS — เช่า VPS สำหรับ Vindictus</title>
 <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Sarabun:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
   :root {
@@ -150,11 +150,109 @@
   }
   .key-btn:hover { background: #00bfae; box-shadow: 0 0 24px rgba(0,212,160,0.5); }
   .key-msg {
-    width: 100%; font-size: 13px; padding: 8px 14px; border-radius: 6px; display: none;
+    width: 100%; font-size: 13px; padding: 0; border-radius: 6px; display: none;
+    overflow: hidden; position: relative;
   }
-  .key-msg.pending { background: rgba(240,180,41,0.1); border: 1px solid rgba(240,180,41,0.3); color: var(--gold); }
-  .key-msg.ok { background: rgba(0,212,160,0.1); border: 1px solid rgba(0,212,160,0.3); color: var(--accent); }
-  .key-msg.err { background: rgba(255,77,109,0.1); border: 1px solid rgba(255,77,109,0.3); color: var(--danger); }
+  .key-msg.pending { background: rgba(240,180,41,0.08); border: 1px solid rgba(240,180,41,0.3); color: var(--gold); padding: 8px 14px; }
+  .key-msg.ok { background: rgba(0,212,160,0.1); border: 1px solid rgba(0,212,160,0.3); color: var(--accent); padding: 8px 14px; }
+  .key-msg.processing {
+    background: linear-gradient(90deg, rgba(0,212,160,0.07), rgba(0,153,255,0.07));
+    border: 1px solid rgba(0,212,160,0.5);
+    color: #5ef0c8;
+    padding: 8px 14px;
+    position: relative; overflow: hidden;
+  }
+  .key-msg.processing::after {
+    content: '';
+    position: absolute;
+    top: 0; left: -60%; width: 60%; height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(0,212,160,0.12), transparent);
+    animation: scan-sweep 2s ease-in-out infinite;
+    z-index: 0;
+  }
+  .key-msg.processing span { position: relative; z-index: 1; }
+  .key-msg.err { background: rgba(255,77,109,0.1); border: 1px solid rgba(255,77,109,0.3); color: var(--danger); padding: 8px 14px; }
+
+  /* Loading state */
+  .key-msg.loading {
+    background: rgba(0,212,160,0.05);
+    border: 1px solid rgba(0,212,160,0.25);
+    color: var(--accent);
+    padding: 0;
+    height: 42px;
+  }
+  .key-msg-loading-inner {
+    display: flex; align-items: center; gap: 10px;
+    padding: 0 14px; height: 100%; position: relative; z-index: 1;
+    font-size: 13px;
+  }
+  /* Scanning bar that slides across */
+  .key-msg.loading::after {
+    content: '';
+    position: absolute;
+    top: 0; left: -60%;
+    width: 60%; height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(0,212,160,0.18), transparent);
+    animation: scan-sweep 1.4s ease-in-out infinite;
+    z-index: 0;
+  }
+  @keyframes scan-sweep {
+    0%   { left: -60%; }
+    100% { left: 120%; }
+  }
+  /* Bottom progress bar */
+  .key-msg-progress {
+    position: absolute; bottom: 0; left: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--accent), rgba(0,212,160,0.4));
+    animation: progress-indeterminate 1.4s ease-in-out infinite;
+    border-radius: 0 2px 2px 0;
+  }
+  @keyframes progress-indeterminate {
+    0%   { left: 0;    width: 0%;   opacity: 1; }
+    50%  { left: 20%;  width: 60%;  opacity: 1; }
+    100% { left: 100%; width: 0%;   opacity: 0; }
+  }
+  /* Pulsing dots */
+  .key-msg-dots {
+    display: inline-flex; gap: 4px; align-items: center; margin-left: 4px;
+  }
+  .key-msg-dots span {
+    width: 5px; height: 5px; border-radius: 50%;
+    background: var(--accent); display: inline-block;
+    animation: dot-bounce 1.2s ease-in-out infinite;
+  }
+  .key-msg-dots span:nth-child(1) { animation-delay: 0s; }
+  .key-msg-dots span:nth-child(2) { animation-delay: 0.2s; }
+  .key-msg-dots span:nth-child(3) { animation-delay: 0.4s; }
+  @keyframes dot-bounce {
+    0%, 80%, 100% { transform: scale(0.6); opacity: 0.4; }
+    40%            { transform: scale(1.2); opacity: 1; }
+  }
+  /* Radar ping icon */
+  .key-msg-radar {
+    width: 18px; height: 18px; flex-shrink: 0;
+    position: relative; display: flex; align-items: center; justify-content: center;
+  }
+  .key-msg-radar::before {
+    content: '';
+    position: absolute;
+    width: 100%; height: 100%;
+    border-radius: 50%;
+    border: 2px solid var(--accent);
+    animation: radar-ping 1.4s ease-out infinite;
+    opacity: 0;
+  }
+  .key-msg-radar::after {
+    content: '';
+    width: 7px; height: 7px; border-radius: 50%;
+    background: var(--accent);
+    box-shadow: 0 0 6px var(--accent);
+  }
+  @keyframes radar-ping {
+    0%   { transform: scale(0.4); opacity: 0.9; }
+    100% { transform: scale(1.8); opacity: 0; }
+  }
 
   /* HERO */
   .hero {
@@ -458,15 +556,16 @@
     background: var(--surface2); border: 1px solid rgba(0,212,160,0.25);
     border-radius: 16px; padding: 28px; max-width: 360px; width: 100%;
     position: relative; text-align: center;
+    display: flex; flex-direction: column; align-items: center;
   }
   .qr-modal h3 { font-family: 'Rajdhani', sans-serif; font-size: 20px; font-weight: 700; color: var(--text); margin-bottom: 4px; }
   .qr-plan-info { font-size: 13px; color: var(--accent); margin-bottom: 6px; }
   .qr-key-info { font-size: 12px; color: var(--muted); margin-bottom: 16px; font-family: 'Rajdhani', monospace; letter-spacing: 1px; }
-  .qr-img-wrap { background: #fff; border-radius: 12px; padding: 12px; display: inline-block; margin-bottom: 16px; }
-  .qr-img-wrap img { width: 200px; height: 200px; display: block; }
+  .qr-img-wrap { background: #fff; border-radius: 12px; padding: 12px; display: inline-flex; align-items: center; justify-content: center; margin-bottom: 16px; }
+  .qr-img-wrap img { width: 200px; height: 200px; display: block; object-fit: contain; }
   .qr-amount { font-family: 'Rajdhani', sans-serif; font-size: 28px; font-weight: 700; color: var(--accent); margin-bottom: 6px; }
   .qr-note { font-size: 12px; color: var(--muted); margin-bottom: 20px; line-height: 1.6; }
-  .qr-btn-row { display: flex; gap: 10px; }
+  .qr-btn-row { display: flex; gap: 10px; width: 100%; }
   .qr-close-btn { flex: 1; padding: 12px; background: none; border: 1px solid var(--border); color: var(--muted); font-size: 14px; border-radius: 8px; cursor: pointer; font-family: 'Rajdhani', sans-serif; font-weight: 600; transition: all .2s; }
   .qr-close-btn:hover { border-color: var(--muted); color: var(--text); }
   .qr-confirm-btn { flex: 2; padding: 12px; background: var(--accent); border: none; color: #000; font-size: 15px; font-weight: 700; border-radius: 8px; cursor: pointer; font-family: 'Rajdhani', sans-serif; transition: background .2s; box-shadow: 0 0 16px rgba(0,212,160,0.3); }
@@ -672,6 +771,39 @@
   .copy-confirm-overlay.closing .copy-confirm-modal {
     animation: modal-out 0.18s ease forwards;
   }
+
+  /* QR Loading */
+  .qr-loader {
+    display: none;
+    flex-direction: column; align-items: center; justify-content: center;
+    width: 224px; height: 224px; margin: 0 auto 16px;
+  }
+  .qr-loader.active { display: flex; }
+  .qr-img-wrap { display: block; }
+  .qr-img-wrap.hidden { display: none; }
+
+  .qr-spinner {
+    width: 44px; height: 44px;
+    border: 3px solid rgba(0,212,160,0.15);
+    border-top-color: var(--accent);
+    border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+    margin-bottom: 12px;
+  }
+  .qr-load-text {
+    font-size: 13px; color: var(--muted);
+    animation: pulse-opacity 1.2s ease infinite;
+  }
+
+  /* PromptPay branding */
+  .qr-promptpay-brand {
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+    margin-bottom: 10px;
+  }
+  .qr-promptpay-brand img {
+    height: 28px; width: auto;
+    filter: drop-shadow(0 0 4px rgba(0,180,120,0.3));
+  }
 </style>
 </head>
 <body>
@@ -696,7 +828,7 @@
     </div>
     <input class="key-input" id="keyInput" type="text" placeholder="กรอกคีย์ที่ได้รับ เช่น VINDI-S7K2-4XPQ" maxlength="19" />
     <button class="key-btn" onclick="checkKey()">ตรวจสอบ</button>
-    <div class="key-msg" id="keyMsg"></div>
+    <div class="key-msg" id="keyMsg"><div class="key-msg-loading-inner" id="keyMsgInner" style="display:none;"><div class="key-msg-radar"></div><span>กำลังตรวจสอบ</span><div class="key-msg-dots"><span></span><span></span><span></span></div><div class="key-msg-progress"></div></div></div>
     <div id="dlBox" style="display:none; width:100%; margin-top:8px;">
       <button id="dlBtn" class="key-btn" style="width:100%; padding:10px; font-size:15px; background:var(--accent); color:#000; border-color:var(--accent);">
         ⬇ ดาวน์โหลดไฟล์ VindiVPS
@@ -840,7 +972,12 @@
       หลังจ่ายแล้ว → ให้นำคีย์ไปตรวจสอบที่แถบด้านบนของเว็บ
     </div>
 
-    <button class="donate-btn" onclick="openQR()">📱 จ่ายเงินพร้อมเพย์</button>
+    <button class="donate-btn" onclick="openQR()" style="display:flex;flex-direction:row;align-items:center;justify-content:center;gap:8px;padding:10px 14px;"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 110 22" height="14" style="display:inline-block;flex-shrink:0;">
+  <rect x="0" y="0" width="58" height="22" rx="2" fill="#1a3266"/>
+  <text x="29" y="16" text-anchor="middle" font-family="Arial,sans-serif" font-weight="700" font-size="13" fill="#fff">Prompt</text>
+  <rect x="58" y="0" width="52" height="22" rx="2" fill="#1a3266"/>
+  <text x="84" y="16" text-anchor="middle" font-family="Arial,sans-serif" font-weight="900" font-size="15" fill="#e8eef8">Pay</text>
+</svg><span style="font-size:15px;font-weight:700;letter-spacing:0.5px;">จ่ายเงิน</span></button>
     <button class="cancel-btn" onclick="closeModal()">ปิด</button>
   </div>
 </div>
@@ -984,14 +1121,29 @@
     const { key, plan, price, displayAmount } = currentOrder;
     const payload = ppPayload('0648354216', displayAmount);
     const qrUrl   = 'https://api.qrserver.com/v1/create-qr-code/?size=200x200&margin=4&data=' + encodeURIComponent(payload);
-    document.getElementById('qrImg').src         = qrUrl;
+
     document.getElementById('qrPlanInfo').textContent = plan + ' — ' + price;
     document.getElementById('qrKeyInfo').textContent  = 'Key: ' + key;
     document.getElementById('qrAmount').textContent   = displayAmount.toFixed(2) + ' บาท';
     const btn = document.getElementById('qrConfirmBtn');
     btn.textContent = '✓ ยืนยันการจ่ายเงิน';
     btn.disabled = false;
+
+    // Reset to loading state
+    document.getElementById('qrLoader').classList.add('active');
+    document.getElementById('qrImgWrap').classList.add('hidden');
+    document.getElementById('qrBrand').style.display = 'none';
+
     document.getElementById('qrOverlay').classList.add('open');
+
+    // Load QR then reveal
+    const img = document.getElementById('qrImg');
+    img.onload = function() {
+      document.getElementById('qrLoader').classList.remove('active');
+      document.getElementById('qrImgWrap').classList.remove('hidden');
+      document.getElementById('qrBrand').style.display = 'flex';
+    };
+    img.src = qrUrl;
   }
 
   function animateClose(overlayId, cb) {
@@ -1063,42 +1215,51 @@
   async function checkKey() {
     const raw = document.getElementById('keyInput').value.trim().toUpperCase();
     const msg = document.getElementById('keyMsg');
+    const inner = document.getElementById('keyMsgInner');
     const dlBox = document.getElementById('dlBox');
     dlBox.style.display = 'none';
-    msg.style.display = 'block';
-    msg.className = 'key-msg';
+
+    function setMsgLoading() {
+      msg.style.display = 'block';
+      msg.className = 'key-msg loading';
+      inner.style.display = 'flex';
+    }
+    function setMsgText(cls, text) {
+      msg.className = 'key-msg ' + cls;
+      inner.style.display = 'none';
+      msg.childNodes.forEach(n => { if (n !== inner) n.remove(); });
+      const span = document.createElement('span');
+      span.style.padding = '8px 14px';
+      span.style.display = 'block';
+      span.textContent = text;
+      msg.appendChild(span);
+    }
 
     if (!raw) {
-      msg.classList.add('pending');
-      msg.textContent = '⚠ กรุณากรอกคีย์ก่อน';
+      msg.style.display = 'block';
+      setMsgText('pending', '⚠ กรุณากรอกคีย์ก่อน');
       return;
     }
 
-    msg.classList.add('pending');
-    msg.textContent = '⏳ กำลังตรวจสอบ...';
+    setMsgLoading();
 
     try {
       const res  = await fetch(API_URL + '?key=' + encodeURIComponent(raw));
       const data = await res.json();
 
       if (data.status === 'approved' && data.fileId) {
-        msg.className = 'key-msg ok';
-        msg.textContent = '✓ คีย์ได้รับการอนุมัติแล้ว! กดปุ่มด้านล่างเพื่อดาวน์โหลด';
+        setMsgText('ok', '✓ คีย์ได้รับการอนุมัติแล้ว! กดปุ่มด้านล่างเพื่อดาวน์โหลด');
         dlBox.style.display = 'block';
         document.getElementById('dlBtn').onclick = () => downloadFile(data.fileId);
       } else if (data.status === 'pending') {
-        msg.classList.add('pending');
-        msg.textContent = '⏳ คีย์อนุมัติแล้ว! — ระบบกำลัง Setup VPS 10-15 นาที ค่อยกลับมาตรวจสอบใหม่';
+        setMsgText('processing', '⚙ คีย์อนุมัติแล้ว! — ระบบกำลัง Setup VPS อยู่ รอ 10-15 นาที แล้วกลับมาตรวจสอบใหม่');
       } else if (data.status === 'notfound') {
-        msg.classList.add('pending');
-        msg.textContent = '⏳ คีย์รอการอนุมัติ — กรุณารอ 5–10 นาทีหลังชำระเงิน แล้วตรวจสอบใหม่';
+        setMsgText('pending', '⏳ คีย์รอการอนุมัติ — กรุณารอ 5–10 นาทีหลังชำระเงิน แล้วตรวจสอบใหม่');
       } else if (data.status === 'error') {
-        msg.classList.add('err');
-        msg.textContent = '✕ เกิดข้อผิดพลาด: ' + (data.message || 'ลองใหม่อีกครั้ง');
+        setMsgText('err', '✕ เกิดข้อผิดพลาด: ' + (data.message || 'ลองใหม่อีกครั้ง'));
       }
     } catch(err) {
-      msg.className = 'key-msg err';
-      msg.textContent = '✕ ไม่สามารถเชื่อมต่อระบบได้ — ลองใหม่อีกครั้ง';
+      setMsgText('err', '✕ ไม่สามารถเชื่อมต่อระบบได้ — ลองใหม่อีกครั้ง');
     }
   }
 
@@ -1184,7 +1345,26 @@ Key: ${key}
     <h3>สแกนจ่ายเงิน</h3>
     <div class="qr-plan-info" id="qrPlanInfo"></div>
     <div class="qr-key-info" id="qrKeyInfo"></div>
-    <div class="qr-img-wrap"><img id="qrImg" src="" alt="QR PromptPay" /></div>
+    <!-- QR loader -->
+    <div class="qr-loader active" id="qrLoader">
+      <div class="qr-spinner"></div>
+      <div class="qr-load-text">กำลังสร้าง QR...</div>
+    </div>
+    <!-- PromptPay brand -->
+    <div class="qr-promptpay-brand" id="qrBrand" style="display:none;">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 60" height="44" style="display:inline-block;vertical-align:middle;">
+  <!-- outer border -->
+  <rect x="1" y="1" width="218" height="58" rx="3" fill="#fff" stroke="#1a3266" stroke-width="2"/>
+  <!-- พร้อมเพย์ top right -->
+  <text x="212" y="16" text-anchor="end" font-family="Arial,sans-serif" font-size="11" fill="#1a3266">&#x0E1E;&#x0E23;&#x0E49;&#x0E2D;&#x0E21;&#x0E40;&#x0E1E;&#x0E22;&#x0E4C;</text>
+  <!-- Prompt: white text on dark blue filled rect -->
+  <rect x="8" y="20" width="98" height="32" rx="2" fill="#1a3266"/>
+  <text x="57" y="42" text-anchor="middle" font-family="Arial,sans-serif" font-weight="700" font-size="19" fill="#fff">Prompt</text>
+  <!-- Pay: dark blue text on white, no fill box, just text continuing -->
+  <text x="116" y="42" font-family="Arial,sans-serif" font-weight="900" font-size="22" fill="#1a3266">Pay</text>
+</svg>
+    </div>
+    <div class="qr-img-wrap hidden" id="qrImgWrap"><img id="qrImg" src="" alt="QR PromptPay" /></div>
     <div class="qr-amount" id="qrAmount"></div>
     <div class="qr-note">สแกน QR ด้วยแอพธนาคารของคุณ<br>หลังโอนแล้วกดปุ่ม "ยืนยันการจ่ายเงิน"</div>
     <div class="qr-btn-row">
@@ -1199,7 +1379,7 @@ Key: ${key}
 <div class="copy-confirm-overlay" id="copyConfirmOverlay">
   <div class="copy-confirm-modal">
     <div class="copy-confirm-icon">✅</div>
-    <h3>สำเร็จ! รอการอนุมัติ</h3>
+    <h3>ส่งเรียบร้อย! รอการอนุมัติ</h3>
     <div style="font-size:13px;margin-bottom:4px;font-family:Rajdhani,sans-serif;font-weight:600;letter-spacing:0.5px;background:linear-gradient(90deg,#f0b429,#ff8c42);-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 0 5px rgba(240,140,40,0.45));">อย่าลืมเก็บคีย์ของคุณไว้นะ</div>
     <div class="copy-confirm-key" id="copyConfirmKey">VINDI-XXXX-XXXX</div>
     <div class="copy-confirm-sub">
