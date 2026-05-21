@@ -424,60 +424,42 @@
     font-size: 20px; font-weight: 700;
     color: var(--text); margin-bottom: 4px;
   }
-  .qr-plan-info {
-    font-size: 13px; color: var(--accent);
-    margin-bottom: 6px;
-  }
+  .qr-plan-info { font-size: 13px; color: var(--accent); margin-bottom: 6px; }
   .qr-key-info {
-    font-size: 12px; color: var(--muted);
-    margin-bottom: 16px;
-    font-family: 'Rajdhani', monospace;
-    letter-spacing: 1px;
+    font-size: 12px; color: var(--muted); margin-bottom: 16px;
+    font-family: 'Rajdhani', monospace; letter-spacing: 1px;
   }
   .qr-img-wrap {
-    background: #fff;
-    border-radius: 12px;
-    padding: 12px;
-    display: inline-block;
-    margin-bottom: 16px;
+    background: #fff; border-radius: 12px; padding: 12px;
+    display: inline-block; margin-bottom: 16px;
   }
   .qr-img-wrap img { width: 200px; height: 200px; display: block; }
   .qr-amount {
     font-family: 'Rajdhani', sans-serif;
     font-size: 28px; font-weight: 700;
-    color: var(--accent);
-    margin-bottom: 6px;
+    color: var(--accent); margin-bottom: 6px;
   }
-  .qr-note {
-    font-size: 12px; color: var(--muted);
-    margin-bottom: 20px;
-    line-height: 1.6;
-  }
-  .qr-btn-row {
-    display: flex; gap: 10px;
-  }
+  .qr-note { font-size: 12px; color: var(--muted); margin-bottom: 20px; line-height: 1.6; }
+  .qr-btn-row { display: flex; gap: 10px; }
   .qr-close-btn {
     flex: 1; padding: 12px;
     background: none; border: 1px solid var(--border);
     color: var(--muted); font-size: 14px; border-radius: 8px; cursor: pointer;
-    font-family: 'Rajdhani', sans-serif; font-weight: 600;
-    transition: all .2s;
+    font-family: 'Rajdhani', sans-serif; font-weight: 600; transition: all .2s;
   }
   .qr-close-btn:hover { border-color: var(--muted); color: var(--text); }
   .qr-confirm-btn {
     flex: 2; padding: 12px;
     background: var(--accent); border: none;
     color: #000; font-size: 15px; font-weight: 700; border-radius: 8px; cursor: pointer;
-    font-family: 'Rajdhani', sans-serif; letter-spacing: 0.5px;
-    transition: background .2s;
+    font-family: 'Rajdhani', sans-serif; letter-spacing: 0.5px; transition: background .2s;
     box-shadow: 0 0 16px rgba(0,212,160,0.3);
   }
   .qr-confirm-btn:hover { background: #00bfae; }
   .qr-confirm-btn:disabled { background: var(--muted); box-shadow: none; cursor: not-allowed; }
   .qr-modal-close {
     position: absolute; top: 14px; right: 16px;
-    background: none; border: none; color: var(--muted);
-    font-size: 20px; cursor: pointer;
+    background: none; border: none; color: var(--muted); font-size: 20px; cursor: pointer;
   }
   .qr-modal-close:hover { color: var(--text); }
 </style>
@@ -672,8 +654,43 @@
     return 'VINDI-' + seg(4) + '-' + seg(4);
   }
 
-  // เก็บ state ของ order ปัจจุบัน
   let currentOrder = { key: '', plan: '', price: '', amount: 0 };
+
+  // สร้าง PromptPay payload ตามมาตรฐาน EMVCo
+  function promptPayPayload(phone, amount) {
+    const pad = (str, len) => str.padStart(len, '0');
+    const fmt = (id, val) => id + pad(val.length.toString(), 2) + val;
+
+    // แปลงเบอร์ → รหัสพร้อมเพย์
+    let target = phone.replace(/\D/g, '');
+    if (target.startsWith('0')) target = '66' + target.substring(1);
+
+    const aid   = fmt('00', 'A000000677010111');
+    const mobileTag = fmt('01', target);
+    const merchantInfo = fmt('29', aid + mobileTag);
+    const amountStr = amount.toFixed(2);
+
+    let payload =
+      fmt('00', '01') +          // Payload Format Indicator
+      merchantInfo +              // Merchant Account Info
+      fmt('52', '0000') +        // Merchant Category Code
+      fmt('53', '764') +         // Transaction Currency (THB)
+      fmt('54', amountStr) +     // Transaction Amount
+      fmt('58', 'TH') +          // Country Code
+      fmt('59', 'PromptPay') +   // Merchant Name
+      fmt('60', 'Bangkok');      // Merchant City
+
+    // CRC16
+    payload += '6304';
+    let crc = 0xFFFF;
+    for (let i = 0; i < payload.length; i++) {
+      crc ^= payload.charCodeAt(i) << 8;
+      for (let j = 0; j < 8; j++) {
+        crc = (crc & 0x8000) ? (crc << 1) ^ 0x1021 : crc << 1;
+      }
+    }
+    return payload + (crc & 0xFFFF).toString(16).toUpperCase().padStart(4, '0');
+  }
 
   function selectPlan(n, name, price) {
     [1,2,3].forEach(i => {
@@ -688,10 +705,8 @@
     btn.classList.add('selected-btn');
     btn.textContent = '✓ เลือกแล้ว';
 
-    const key = randomKey();
+    const key    = randomKey();
     const amount = parseInt(price.replace(/[^0-9]/g, ''));
-
-    // เก็บไว้ใช้ตอนเปิด QR และ confirm
     currentOrder = { key, plan: name, price, amount };
 
     document.getElementById('modalPlanName').textContent = 'Plan: ' + name + ' — ' + price;
@@ -701,16 +716,16 @@
 
   function openQR() {
     const { key, plan, price, amount } = currentOrder;
-    const phone = '0648354216';
+    const phone   = '0648354216';
+    const payload = promptPayPayload(phone, amount);
 
-    // สร้าง QR พร้อมเพย์ผ่าน promptpay.io
-    const phoneFormatted = '66' + phone.substring(1); // 0648... → 66648...
-    const qrUrl = `https://promptpay.io/${phoneFormatted}/${amount}.png`;
+    // ใช้ api.qrserver.com สร้าง QR จาก payload โดยตรง
+    const qrUrl = 'https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=' + encodeURIComponent(payload);
 
     document.getElementById('qrImg').src = qrUrl;
     document.getElementById('qrPlanInfo').textContent = plan + ' — ' + price;
-    document.getElementById('qrKeyInfo').textContent = 'Key: ' + key;
-    document.getElementById('qrAmount').textContent = amount + ' บาท';
+    document.getElementById('qrKeyInfo').textContent  = 'Key: ' + key;
+    document.getElementById('qrAmount').textContent   = amount + ' บาท';
 
     const btn = document.getElementById('qrConfirmBtn');
     btn.textContent = '✓ ยืนยันการจ่ายเงิน';
@@ -731,21 +746,15 @@
     const btn = document.getElementById('qrConfirmBtn');
     btn.textContent = '⏳ กำลังส่ง...';
     btn.disabled = true;
-
     const { key, plan, price } = currentOrder;
-
     try {
       await fetch(API_URL, {
         method: 'POST',
         body: JSON.stringify({ key, plan, price, confirmed: true })
       });
     } catch(e) {}
-
     btn.textContent = '✓ ส่งแล้ว! รอการอนุมัติ';
-    setTimeout(() => {
-      closeQR();
-      closeModal();
-    }, 1500);
+    setTimeout(() => { closeQR(); closeModal(); }, 1500);
   }
 
   function closeModal() {
