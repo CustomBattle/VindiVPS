@@ -178,6 +178,94 @@
   .key-msg.processing span { position: relative; z-index: 1; }
   .key-msg.err { background: rgba(255,77,109,0.1); border: 1px solid rgba(255,77,109,0.3); color: var(--danger); padding: 8px 14px; }
 
+  /* STATUS CARD (approved) */
+  .key-status-card {
+    width: 100%;
+    background: linear-gradient(135deg, rgba(0,212,160,0.07) 0%, rgba(0,153,255,0.04) 100%);
+    border: 1px solid rgba(0,212,160,0.35);
+    border-radius: 12px;
+    padding: 18px 20px 14px;
+    display: none;
+    flex-direction: column;
+    gap: 0;
+    margin-top: 10px;
+    position: relative;
+    overflow: hidden;
+  }
+  .key-status-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+    border-radius: 12px 12px 0 0;
+  }
+  .key-status-card.visible { display: flex; }
+  .key-status-header {
+    display: flex; align-items: center; gap: 8px;
+    margin-bottom: 14px;
+  }
+  .key-status-header .badge {
+    background: rgba(0,212,160,0.15);
+    border: 1px solid rgba(0,212,160,0.4);
+    color: var(--accent);
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 11px; font-weight: 700; letter-spacing: 1px;
+    padding: 3px 10px; border-radius: 20px;
+    text-transform: uppercase;
+  }
+  .key-status-title {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 15px; font-weight: 700;
+    color: var(--accent);
+    letter-spacing: 0.3px;
+  }
+  .key-status-rows {
+    display: flex; flex-direction: column; gap: 8px;
+    margin-bottom: 14px;
+  }
+  .key-status-row {
+    display: flex; align-items: center;
+    font-size: 13.5px;
+    gap: 8px;
+  }
+  .key-status-row .label {
+    color: var(--muted);
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 12px; font-weight: 600; letter-spacing: 0.5px;
+    text-transform: uppercase;
+    min-width: 120px;
+    flex-shrink: 0;
+  }
+  .key-status-row .value {
+    color: var(--text);
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 14px; font-weight: 600;
+  }
+  .key-status-row .value.accent { color: var(--accent); }
+  .key-status-row .value.warn   { color: var(--gold); }
+  .key-status-row .value.danger { color: var(--danger); }
+  .key-status-divider {
+    height: 1px;
+    background: rgba(0,212,160,0.12);
+    margin: 10px 0;
+  }
+  .key-status-warning {
+    background: rgba(255,77,109,0.07);
+    border: 1px solid rgba(255,77,109,0.25);
+    border-radius: 8px;
+    padding: 10px 14px;
+    font-size: 12.5px;
+    color: rgba(232,234,240,0.8);
+    line-height: 1.65;
+  }
+  .key-status-warning strong {
+    color: var(--danger);
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 13px; letter-spacing: 0.3px;
+    display: block; margin-bottom: 4px;
+  }
+
   /* Loading state */
   .key-msg.loading {
     background: rgba(0,212,160,0.05);
@@ -896,6 +984,32 @@
     <input class="key-input" id="keyInput" type="text" placeholder="กรอกคีย์ที่ได้รับ เช่น VINDI-S7K2-4XPQ" maxlength="19" />
     <button class="key-btn" onclick="checkKey()">ตรวจสอบ</button>
     <div class="key-msg" id="keyMsg"><div class="key-msg-loading-inner" id="keyMsgInner" style="display:none;"><div class="key-msg-radar"></div><span>กำลังตรวจสอบ</span><div class="key-msg-dots"><span></span><span></span><span></span></div><div class="key-msg-progress"></div></div></div>
+    <div class="key-status-card" id="keyStatusCard">
+      <div class="key-status-header">
+        <span class="badge" id="keyStatusBadge">✓ APPROVED</span>
+        <span class="key-status-title">ข้อมูล VPS ของคุณ</span>
+      </div>
+      <div class="key-status-rows">
+        <div class="key-status-row">
+          <span class="label">สถานะ</span>
+          <span class="value accent" id="keyStatusStatus">—</span>
+        </div>
+        <div class="key-status-row">
+          <span class="label">รหัสแตกไฟล์</span>
+          <span class="value" id="keyStatusPassword">—</span>
+        </div>
+        <div class="key-status-row">
+          <span class="label">วันหมดอายุ</span>
+          <span class="value warn" id="keyStatusExpire">—</span>
+        </div>
+      </div>
+      <div class="key-status-divider"></div>
+      <div class="key-status-warning">
+        <strong>⚠ คำเตือน</strong>
+        ถ้าเข้าเกมแล้ว Wiresock ไม่เชื่อม VPS ให้อัตโนมัติ<br>
+        ให้ทำการ Connect ด้วยตัวเองได้เลยเหมือนกัน
+      </div>
+    </div>
     <div id="dlBox" style="display:none; width:100%; margin-top:8px;">
       <button id="dlBtn" class="key-btn" style="width:100%; padding:10px; font-size:15px; background:var(--accent); color:#000; border-color:var(--accent);">
         ⬇ ดาวน์โหลดไฟล์ VindiVPS
@@ -1288,6 +1402,7 @@
     const inner = document.getElementById('keyMsgInner');
     const dlBox = document.getElementById('dlBox');
     dlBox.style.display = 'none';
+    document.getElementById('keyStatusCard').classList.remove('visible');
 
     function setMsgLoading() {
       msg.style.display = 'block';
@@ -1317,8 +1432,17 @@
       const res  = await fetch(API_URL + '?key=' + encodeURIComponent(raw));
       const data = await res.json();
 
+      const statusCard = document.getElementById('keyStatusCard');
+      statusCard.classList.remove('visible');
+
       if (data.status === 'approved' && data.fileId) {
-        setMsgText('ok', '✓ คีย์ได้รับการอนุมัติแล้ว! กดปุ่มด้านล่างเพื่อดาวน์โหลด');
+        // แสดง status card
+        msg.style.display = 'none';
+        document.getElementById('keyStatusStatus').textContent = '✓ อนุมัติแล้ว';
+        document.getElementById('keyStatusStatus').className = 'value accent';
+        document.getElementById('keyStatusPassword').textContent = raw;
+        document.getElementById('keyStatusExpire').textContent = data.expireDate || '—';
+        statusCard.classList.add('visible');
         dlBox.style.display = 'block';
         document.getElementById('dlBtn').onclick = () => downloadFile(data.fileId);
       } else if (data.status === 'pending') {
