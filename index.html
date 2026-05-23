@@ -30,7 +30,7 @@
     --danger: #ff4d6d;
   }
 
-  html { scroll-behavior: smooth; }
+  html { scroll-behavior: smooth; overflow-y: scroll; }
   * { box-sizing: border-box; margin: 0; padding: 0; }
 
   body {
@@ -1798,51 +1798,7 @@ window.copyAndClose = function() {
 </script>
 
 
-<script>
-// ===== SMOOTH INERTIA SCROLL =====
-(function() {
-  let target = window.scrollY;
-  let current = window.scrollY;
-  let rafId = null;
-  const ease = 0.09;
 
-  function lerp(a, b, t) { return a + (b - a) * t; }
-
-  function getMaxScroll() {
-    return Math.max(0, document.documentElement.scrollHeight - window.innerHeight);
-  }
-
-  function tick() {
-    current = lerp(current, target, ease);
-    const diff = Math.abs(target - current);
-    if (diff < 0.5) {
-      current = target;
-      window.scrollTo(0, current);
-      rafId = null;
-      return;
-    }
-    window.scrollTo(0, current);
-    rafId = requestAnimationFrame(tick);
-  }
-
-  window.addEventListener('wheel', function(e) {
-    e.preventDefault();
-    // sync target กับ scroll จริงก่อนทุกครั้ง ป้องกันติด
-    if (!rafId) {
-      target = window.scrollY;
-      current = window.scrollY;
-    }
-    target += e.deltaY * 1.2;
-    target = Math.max(0, Math.min(target, getMaxScroll()));
-    if (!rafId) rafId = requestAnimationFrame(tick);
-  }, { passive: false });
-
-  // sync เมื่อ resize หน้าจอ
-  window.addEventListener('resize', () => {
-    target = Math.min(target, getMaxScroll());
-  });
-})();
-</script>
 
 </body>
 </html>
