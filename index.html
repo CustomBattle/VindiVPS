@@ -1060,7 +1060,7 @@
       <!-- Basic -->
       <div class="plan-card">
         <div class="plan-tier cyan">Basic</div>
-        <div class="plan-price">8<sub>฿</sub></div>
+        <div class="plan-price">6<sub>฿</sub></div>
         <div class="plan-period period-cyan">⏱ ต่อวัน</div>
         <div class="divider"></div>
         <ul class="spec-list">
@@ -1078,7 +1078,7 @@
           </li>
           <li>
             <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg></div>
-            <span>ใช้ร่วมกันได้สูงสุด 2 คน</span>
+            <span>ใช้พร้อมกันได้สูงสุด 1 คน (ลดมาจาก 8บ.)</span>
           </li>
         </ul>
         <button class="plan-btn" id="btn1" onclick="selectPlan(1,'Basic','8฿')">
@@ -1090,13 +1090,13 @@
       <div class="plan-card featured">
         <div class="pop-badge">⭐ ยอดนิยม</div>
         <div class="plan-tier gold">Pro</div>
-        <div class="plan-price">50<sub>฿</sub></div>
+        <div class="plan-price">35<sub>฿</sub></div>
         <div class="plan-period period-gold">⏱ ต่อสัปดาห์</div>
         <div class="divider"></div>
         <ul class="spec-list">
           <li>
             <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg></div>
-            <span>ราคาสุดคุ้ม <strong>ตกวันละ 7 บาท</strong></span>
+            <span>ราคาสุดคุ้ม <strong>ตกวันละ 5 บาท</strong></span>
           </li>
           <li>
             <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg></div>
@@ -1112,7 +1112,7 @@
           </li>
           <li>
             <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg></div>
-            <span>ใช้ร่วมกันได้สูงสุด 4 คน</span>
+            <span>ใช้พร้อมกันได้สูงสุด 1 คน (ลดมาจาก 50บ.)</span>
           </li>
         </ul>
         <button class="plan-btn featured-btn" id="btn2" onclick="selectPlan(2,'Pro','50฿')">
@@ -1123,13 +1123,13 @@
       <!-- ULTRA -->
       <div class="plan-card">
         <div class="plan-tier blue">Ultra</div>
-        <div class="plan-price">199<sub>฿</sub></div>
+        <div class="plan-price">149<sub>฿</sub></div>
         <div class="plan-period period-blue">⏱ ต่อเดือน</div>
         <div class="divider"></div>
         <ul class="spec-list">
           <li>
             <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg></div>
-            <span>ราคาสุดคุ้ม <strong>ตกวันละ 6.6 บาท</strong></span>
+            <span>ราคาสุดคุ้ม <strong>ตกวันละ 5 บาท</strong></span>
           </li>
           <li>
             <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg></div>
@@ -1145,7 +1145,7 @@
           </li>
           <li>
             <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg></div>
-            <span>ใช้ร่วมกันได้สูงสุด 4 คน</span>
+            <span>ใช้พร้อมกันได้สูงสุด 1 คน (ลดมาจาก 200บ.)</span>
           </li>
         </ul>
         <button class="plan-btn" id="btn3" onclick="selectPlan(3,'Ultra','199฿')">
@@ -1551,7 +1551,7 @@
     a.click();
     document.body.removeChild(a);
     clearLoading(btn, '✓ ดาวน์โหลดแล้ว');
-    document.getElementById('pwKeyDisplay').textContent = 'vindivps';
+    document.getElementById('pwKeyDisplay').textContent = 'VINDIVPS';
     // ดึงคีย์จาก input แล้วใส่ใน popup
     const userKey = document.getElementById('keyInput').value.trim().toUpperCase();
     document.getElementById('pwAppKeyDisplay').textContent = userKey || '—';
