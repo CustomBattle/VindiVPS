@@ -1898,7 +1898,7 @@ window.copyAndClose = function() {
     background: var(--surface2);
     border: 1px solid rgba(0,212,160,0.35);
     border-radius: 16px;
-    max-width: 700px; width: 100%;
+    max-width: clamp(320px, 92vw, 60%); width: 100%;
     position: relative;
     margin: auto;
     overflow: hidden;
@@ -2031,6 +2031,24 @@ window.copyAndClose = function() {
               style="width:100%;height:100%;object-fit:contain;display:block;">
               <source src="Step-3.webm" type="video/webm">
             </video>
+          </div>
+        </div>
+      </div>
+	  
+	  <!-- Step 3 -->
+      <div style="display:flex;gap:14px;margin-bottom:20px;">
+        <div style="flex-shrink:0;width:28px;height:28px;border-radius:50%;background:rgba(0,212,160,0.15);border:1.5px solid rgba(0,212,160,0.4);display:flex;align-items:center;justify-content:center;font-family:'Rajdhani',sans-serif;font-size:14px;font-weight:700;color:var(--accent);">FULL</div>
+        <div style="flex:1;">
+          <div style="font-size:14px;color:var(--text);margin-bottom:8px;line-height:1.6;">
+            ถ้ายัง งง ดูวิดีโอสอนแบบละเอียดได้เลย (ตอนนี้ยังไม่มี อนาคตจะมาอัพเดทวิดีโอให้)
+          </div>
+          <div id="dlStep2Img" style="
+            width:100%;min-height:360px;border-radius:8px;
+            background:rgba(255,255,255,0.04);border:1px dashed rgba(255,255,255,0.12);
+            display:flex;align-items:center;justify-content:center;
+            color:var(--muted);font-size:12px;
+          ">
+            <อนาคตจะอัพเดททวิดีโอสอนให้>
           </div>
         </div>
       </div>
