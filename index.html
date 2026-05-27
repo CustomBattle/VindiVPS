@@ -1553,7 +1553,7 @@
 
     if (data.status === 'approved' && data.fileId) {
       stopPoll();
-      dlBox.style.display = 'block';
+      dlBox.style.display = 'none';
       msg.style.display = 'none';
       document.getElementById('keyStatusStatus').textContent = '✓ อนุมัติแล้ว';
       document.getElementById('keyStatusStatus').className = 'value accent';
