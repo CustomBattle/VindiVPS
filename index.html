@@ -1898,7 +1898,7 @@ window.copyAndClose = function() {
     background: var(--surface2);
     border: 1px solid rgba(0,212,160,0.35);
     border-radius: 16px;
-    max-width: 560px; width: 100%;
+    max-width: 700px; width: 100%;
     position: relative;
     margin: auto;
     overflow: hidden;
@@ -1960,7 +1960,7 @@ window.copyAndClose = function() {
 
     <!-- STEPS -->
     <div style="padding:0 28px 28px;">
-      <div style="font-family:'Rajdhani',sans-serif;font-size:13px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--accent);margin-bottom:16px;display:flex;align-items:center;gap:10px;">
+      <div style="font-family:'Rajdhani',sans-serif;font-size:20px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--accent);margin-bottom:16px;display:flex;align-items:center;gap:10px;">
         <span style="flex:1;height:1px;background:rgba(0,212,160,0.2);"></span>
         วิธีติดตั้ง
         <span style="flex:1;height:1px;background:rgba(0,212,160,0.2);"></span>
@@ -1971,14 +1971,21 @@ window.copyAndClose = function() {
         <div style="flex-shrink:0;width:28px;height:28px;border-radius:50%;background:rgba(0,212,160,0.15);border:1.5px solid rgba(0,212,160,0.4);display:flex;align-items:center;justify-content:center;font-family:'Rajdhani',sans-serif;font-size:14px;font-weight:700;color:var(--accent);">1</div>
         <div style="flex:1;">
           <div style="font-size:14px;color:var(--text);margin-bottom:8px;line-height:1.6;">
-            เปิดไฟล์ <strong style="color:var(--accent);font-family:'Rajdhani',sans-serif;">VindiVPS_Setup</strong> คลิก more info และ Run anyway
+            แตกไฟล์ <strong style="color:#f0b429;">VindiVPS_Setup</strong> วิธีแตก คลิกขวาเลือก Extract All...
           </div>
           <div id="dlStep1Img" style="
-            width:100%;min-height:80px;border-radius:8px;
+            width:100%;min-height:80px;overflow:hidden;border-radius:8px;
             background:rgba(255,255,255,0.04);border:1px dashed rgba(255,255,255,0.12);
             display:flex;align-items:center;justify-content:center;
             color:var(--muted);font-size:12px;
-          ">[ ภาพประกอบ เดี๋ยวมาใส่ให้ ]</div>
+          ">
+            <video
+              class="step-video"
+              loop muted playsinline preload="auto"
+              style="width:100%;height:100%;object-fit:contain;display:block;">
+              <source src="Step-1.webm" type="video/webm">
+            </video>
+          </div>
         </div>
       </div>
 
@@ -1987,30 +1994,44 @@ window.copyAndClose = function() {
         <div style="flex-shrink:0;width:28px;height:28px;border-radius:50%;background:rgba(0,212,160,0.15);border:1.5px solid rgba(0,212,160,0.4);display:flex;align-items:center;justify-content:center;font-family:'Rajdhani',sans-serif;font-size:14px;font-weight:700;color:var(--accent);">2</div>
         <div style="flex:1;">
           <div style="font-size:14px;color:var(--text);margin-bottom:8px;line-height:1.6;">
-            หลังจากมันติดตั้งเสร็จกดปุ่ม <strong style="color:#f0b429;">Finish</strong> แล้วใช้งานโปรแกรมได้ทันที
+            ติดตั้ง <strong style="color:var(--accent);font-family:'Rajdhani',sans-serif;">VindiVPS_Setup</strong> ที่แตกไฟล์ออกมา ดับเบิ้ลคลิกและกด Next ไปเรื่อยๆจนเสร็จ
           </div>
           <div id="dlStep2Img" style="
             width:100%;min-height:80px;border-radius:8px;
             background:rgba(255,255,255,0.04);border:1px dashed rgba(255,255,255,0.12);
             display:flex;align-items:center;justify-content:center;
             color:var(--muted);font-size:12px;
-          ">[ ภาพประกอบ เดี๋ยวมาใส่ให้ ]</div>
+          ">
+            <video
+              class="step-video"
+              loop muted playsinline preload="auto"
+              style="width:100%;height:100%;object-fit:contain;display:block;">
+              <source src="Step-2.webm" type="video/webm">
+            </video>
+          </div>
         </div>
       </div>
 
-      <!-- Step 5 -->
+      <!-- Step 3 -->
       <div style="display:flex;gap:14px;margin-bottom:20px;">
-        <div style="flex-shrink:0;width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,#00d4a0,#0099ff);border:none;display:flex;align-items:center;justify-content:center;font-family:'Rajdhani',sans-serif;font-size:14px;font-weight:700;color:#000;">3</div>
+        <div style="flex-shrink:0;width:28px;height:28px;border-radius:50%;background:rgba(0,212,160,0.15);border:1.5px solid rgba(0,212,160,0.4);display:flex;align-items:center;justify-content:center;font-family:'Rajdhani',sans-serif;font-size:14px;font-weight:700;color:var(--accent);">3</div>
         <div style="flex:1;">
           <div style="font-size:14px;color:var(--text);margin-bottom:8px;line-height:1.6;">
-            เปิดโปรแกรม <strong style="color:var(--accent);font-family:'Rajdhani',sans-serif;">VindiVPS</strong> ใส่คีย์ที่ซื้อมา แล้วใช้งานได้เลย 🎮
+            เปิดโปรแกรม <strong style="color:var(--accent);font-family:'Rajdhani',sans-serif;">VindiVPS</strong> เติมคีย์ แล้วใช้งานได้เลย <strong style="color:#f07f29;font-family:'Rajdhani',sans-serif;">( วิธีใช้กด Connect หลังจากปิดมุดนะครับ )</strong>
           </div>
-          <div id="dlStep5Img" style="
+          <div id="dlStep2Img" style="
             width:100%;min-height:80px;border-radius:8px;
             background:rgba(255,255,255,0.04);border:1px dashed rgba(255,255,255,0.12);
             display:flex;align-items:center;justify-content:center;
             color:var(--muted);font-size:12px;
-          ">[ ภาพประกอบ เดี๋ยวมาใส่ให้ ]</div>
+          ">
+            <video
+              class="step-video"
+              loop muted playsinline preload="auto"
+              style="width:100%;height:100%;object-fit:contain;display:block;">
+              <source src="Step-3.webm" type="video/webm">
+            </video>
+          </div>
         </div>
       </div>
 
@@ -2027,24 +2048,97 @@ window.copyAndClose = function() {
 </div>
 
 <script>
+  // ---- Video Observer ----
+  var _videoObserver = null;
+  var _videoRatios = new Map(); // เก็บ ratio ปัจจุบันของแต่ละวิดีโอ
+
+  function pickAndPlay(videos) {
+    // หาวิดีโอที่ visible มากที่สุด
+    var bestVideo = null;
+    var bestRatio = 0;
+    videos.forEach(function(v) {
+      var r = _videoRatios.get(v) || 0;
+      if (r > bestRatio) {
+        bestRatio = r;
+        bestVideo = v;
+      }
+    });
+    // เล่นอันที่ visible มากสุด (ถ้ามีอะไรอยู่ในจอเลย), หยุดอันอื่น
+    videos.forEach(function(v) {
+      if (v === bestVideo && bestRatio > 0.05) {
+        if (v.paused) v.play();
+      } else {
+        if (!v.paused) v.pause();
+      }
+    });
+  }
+
+  function initVideoObserver() {
+    if (_videoObserver) {
+      _videoObserver.disconnect();
+      _videoObserver = null;
+    }
+    _videoRatios = new Map();
+
+    var videos = document.querySelectorAll('.step-video');
+    if (!videos.length) return;
+
+    // ใช้ thresholds ละเอียดเพื่อให้อัปเดต ratio บ่อยๆ ขณะ scroll
+    var thresholds = [];
+    for (var i = 0; i <= 20; i++) thresholds.push(i / 20);
+
+    _videoObserver = new IntersectionObserver(function(entries) {
+      entries.forEach(function(entry) {
+        _videoRatios.set(entry.target, entry.intersectionRatio);
+      });
+      pickAndPlay(videos);
+    }, {
+      root: document.getElementById('dlPopupOverlay'),
+      threshold: thresholds
+    });
+
+    videos.forEach(function(v) {
+      _videoRatios.set(v, 0);
+      _videoObserver.observe(v);
+    });
+  }
+
+  function destroyVideoObserver() {
+    if (_videoObserver) {
+      _videoObserver.disconnect();
+      _videoObserver = null;
+    }
+    // หยุดวิดีโอทั้งหมดด้วย
+    document.querySelectorAll('.step-video').forEach(function(v) {
+      v.pause();
+    });
+  }
+
+  // ---- Popup Controls ----
   function openDlPopup() {
-    const overlay = document.getElementById('dlPopupOverlay');
+    var overlay = document.getElementById('dlPopupOverlay');
     overlay.style.display = 'flex';
     document.body.style.overflow = 'hidden';
+    // รอให้ DOM render เสร็จก่อน แล้วค่อย init observer
+    setTimeout(initVideoObserver, 100);
   }
+
   function closeDlPopup() {
-    const overlay = document.getElementById('dlPopupOverlay');
+    var overlay = document.getElementById('dlPopupOverlay');
     overlay.style.display = 'none';
     document.body.style.overflow = '';
+    destroyVideoObserver();
   }
+
   function closeDlPopupIfOutside(e) {
     if (e.target === document.getElementById('dlPopupOverlay')) closeDlPopup();
   }
+
   function copyZipPass() {
-    const pass = document.getElementById('dlZipPass').textContent.trim();
-    const btn = document.getElementById('copyZipBtn');
+    var pass = document.getElementById('dlZipPass').textContent.trim();
+    var btn = document.getElementById('copyZipBtn');
     try { navigator.clipboard.writeText(pass); } catch(e) {
-      const ta = document.createElement('textarea');
+      var ta = document.createElement('textarea');
       ta.value = pass; ta.style.cssText = 'position:fixed;top:0;opacity:0;';
       document.body.appendChild(ta); ta.focus(); ta.select();
       try { document.execCommand('copy'); } catch(e2) {}
@@ -2053,12 +2147,9 @@ window.copyAndClose = function() {
     btn.textContent = '✓ คัดลอกแล้ว!';
     btn.style.background = 'rgba(0,212,160,0.3)';
     clearTimeout(btn._t);
-    btn._t = setTimeout(() => {
+    btn._t = setTimeout(function() {
       btn.textContent = '📋 คัดลอก';
       btn.style.background = 'rgba(0,212,160,0.15)';
     }, 1500);
   }
 </script>
-
-
-
