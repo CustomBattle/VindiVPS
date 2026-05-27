@@ -1128,7 +1128,7 @@
           </li>
           <li>
             <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg></div>
-            <span>ใช้พร้อมกันได้สูงสุด 1 คน<br></span>
+            <span>ใช้พร้อมกันได้สูงสุด 1 คน<br>(ลดราคามาจาก 8 บาท)</span>
           </li>
         </ul>
         <button class="plan-btn" id="btn1" onclick="selectPlan(1,'Basic','6฿')">
@@ -1162,7 +1162,7 @@
           </li>
           <li>
             <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg></div>
-            <span>ใช้พร้อมกันได้สูงสุด 1 คน<br></span>
+            <span>ใช้พร้อมกันได้สูงสุด 1 คน<br>(ลดราคามาจาก 50 บาท)</span>
           </li>
         </ul>
         <button class="plan-btn featured-btn" id="btn2" onclick="selectPlan(2,'Pro','35฿')">
@@ -1195,7 +1195,7 @@
           </li>
           <li>
             <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg></div>
-            <span>ใช้พร้อมกันได้สูงสุด 1 คน<br></span>
+            <span>ใช้พร้อมกันได้สูงสุด 1 คน<br>(ลดราคามาจาก 200 บาท)</span>
           </li>
         </ul>
         <button class="plan-btn" id="btn3" onclick="selectPlan(3,'Ultra','149฿')">
@@ -1898,7 +1898,7 @@ window.copyAndClose = function() {
     background: var(--surface2);
     border: 1px solid rgba(0,212,160,0.35);
     border-radius: 16px;
-    max-width: clamp(320px, 92vw, 60%); width: 100%;
+    width: 100%;
     position: relative;
     margin: auto;
     overflow: hidden;
@@ -1936,7 +1936,7 @@ window.copyAndClose = function() {
       <span style="font-size:20px;line-height:1.2;flex-shrink:0;">⚠️</span>
       <div style="font-size:13px;color:rgba(232,234,240,0.88);line-height:1.7;">
         <strong style="color:#ff6b6b;font-family:'Rajdhani',sans-serif;font-size:14px;display:block;margin-bottom:3px;">ประกาศ</strong>
-        โปรแกรมนี้เป็นเพียงแค่ตัว connect เส้นทาง internet<br>เพื่อให้คุณเล่นเกมผ่านเครือข่ายของ Data Center (VPS)<br>ซึ่ง VPS ที่ผมเช่ามา ไม่ใช่เน็ตบ้านทั่วไปที่มีปัญหากับเกมอยู่ตอนนี้<br>และผมได้ทำการ DNAT ให้ไม่เจอปัญหา 1 Bar ไว้ให้เรียบร้อยแล้ว
+        โปรแกรมนี้เป็นเพียงแค่ตัว connect เส้นทาง internet เพื่อให้คุณเล่นเกมผ่านเครือข่ายของ Data Center (VPS)<br>ซึ่ง VPS ที่ผมเช่ามา ไม่ใช่เน็ตบ้านทั่วไปที่มีปัญหากับเกมอยู่ตอนนี้ และผมได้ทำการ DNAT ให้ไม่เจอปัญหา 1 Bar ไว้ให้เรียบร้อยแล้ว
       </div>
     </div>
 
@@ -2019,7 +2019,7 @@ window.copyAndClose = function() {
           <div style="font-size:14px;color:var(--text);margin-bottom:8px;line-height:1.6;">
             เปิดโปรแกรม <strong style="color:var(--accent);font-family:'Rajdhani',sans-serif;">VindiVPS</strong> เติมคีย์ แล้วใช้งานได้เลย <strong style="color:#f07f29;font-family:'Rajdhani',sans-serif;">( วิธีใช้กด Connect หลังจากปิดมุดนะครับ )</strong>
           </div>
-          <div id="dlStep2Img" style="
+          <div style="
             width:100%;min-height:80px;border-radius:8px;
             background:rgba(255,255,255,0.04);border:1px dashed rgba(255,255,255,0.12);
             display:flex;align-items:center;justify-content:center;
@@ -2034,21 +2034,21 @@ window.copyAndClose = function() {
           </div>
         </div>
       </div>
-	  
-	  <!-- Step 3 -->
+
+      <!-- Step FULL -->
       <div style="display:flex;gap:14px;margin-bottom:20px;">
-        <div style="flex-shrink:0;width:28px;height:28px;border-radius:50%;background:rgba(0,212,160,0.15);border:1.5px solid rgba(0,212,160,0.4);display:flex;align-items:center;justify-content:center;font-family:'Rajdhani',sans-serif;font-size:14px;font-weight:700;color:var(--accent);">FULL</div>
+        <div style="flex-shrink:0;width:28px;height:28px;border-radius:50%;background:rgba(0,212,160,0.15);border:1.5px solid rgba(0,212,160,0.4);display:flex;align-items:center;justify-content:center;font-family:'Rajdhani',sans-serif;font-size:10px;font-weight:700;color:var(--accent);">FULL</div>
         <div style="flex:1;">
           <div style="font-size:14px;color:var(--text);margin-bottom:8px;line-height:1.6;">
             ถ้ายัง งง ดูวิดีโอสอนแบบละเอียดได้เลย (ตอนนี้ยังไม่มี อนาคตจะมาอัพเดทวิดีโอให้)
           </div>
-          <div id="dlStep2Img" style="
+          <div style="
             width:100%;min-height:360px;border-radius:8px;
             background:rgba(255,255,255,0.04);border:1px dashed rgba(255,255,255,0.12);
             display:flex;align-items:center;justify-content:center;
             color:var(--muted);font-size:12px;
           ">
-            <อนาคตจะอัพเดททวิดีโอสอนให้>
+            &lt;อนาคตจะอัพเดทวิดีโอสอนให้&gt;
           </div>
         </div>
       </div>
@@ -2066,12 +2066,25 @@ window.copyAndClose = function() {
 </div>
 
 <script>
+  // ---- Popup Width ----
+  function updatePopupWidth() {
+    var modal = document.getElementById('dlPopupModal');
+    if (!modal) return;
+    var w = window.innerWidth;
+    if (w <= 768) {
+      modal.style.maxWidth = '94%';   // มือถือ
+    } else if (w < 1800) {
+      modal.style.maxWidth = '85%';   // คอมหน้าต่างเล็ก
+    } else {
+      modal.style.maxWidth = '65%';   // คอมจอใหญ่ 1800+
+    }
+  }
+
   // ---- Video Observer ----
   var _videoObserver = null;
-  var _videoRatios = new Map(); // เก็บ ratio ปัจจุบันของแต่ละวิดีโอ
+  var _videoRatios = new Map();
 
   function pickAndPlay(videos) {
-    // หาวิดีโอที่ visible มากที่สุด
     var bestVideo = null;
     var bestRatio = 0;
     videos.forEach(function(v) {
@@ -2081,7 +2094,6 @@ window.copyAndClose = function() {
         bestVideo = v;
       }
     });
-    // เล่นอันที่ visible มากสุด (ถ้ามีอะไรอยู่ในจอเลย), หยุดอันอื่น
     videos.forEach(function(v) {
       if (v === bestVideo && bestRatio > 0.05) {
         if (v.paused) v.play();
@@ -2101,7 +2113,6 @@ window.copyAndClose = function() {
     var videos = document.querySelectorAll('.step-video');
     if (!videos.length) return;
 
-    // ใช้ thresholds ละเอียดเพื่อให้อัปเดต ratio บ่อยๆ ขณะ scroll
     var thresholds = [];
     for (var i = 0; i <= 20; i++) thresholds.push(i / 20);
 
@@ -2126,7 +2137,6 @@ window.copyAndClose = function() {
       _videoObserver.disconnect();
       _videoObserver = null;
     }
-    // หยุดวิดีโอทั้งหมดด้วย
     document.querySelectorAll('.step-video').forEach(function(v) {
       v.pause();
     });
@@ -2137,7 +2147,8 @@ window.copyAndClose = function() {
     var overlay = document.getElementById('dlPopupOverlay');
     overlay.style.display = 'flex';
     document.body.style.overflow = 'hidden';
-    // รอให้ DOM render เสร็จก่อน แล้วค่อย init observer
+    updatePopupWidth();
+    window.addEventListener('resize', updatePopupWidth);
     setTimeout(initVideoObserver, 100);
   }
 
@@ -2145,6 +2156,7 @@ window.copyAndClose = function() {
     var overlay = document.getElementById('dlPopupOverlay');
     overlay.style.display = 'none';
     document.body.style.overflow = '';
+    window.removeEventListener('resize', updatePopupWidth);
     destroyVideoObserver();
   }
 
