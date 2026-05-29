@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta property="og:type" content="website">
 <meta property="og:title" content="VindiVPS — VPS สำหรับ Vindictus">
-<meta property="og:description" content="แก้โรค 1 Bar · อาการหลุด · ใช้งานง่าย">
+<meta property="og:description" content="แก้อาการ 1 Bar · แก้อาการหลุด">
 <meta property="og:image" content="https://custombattle.github.io/VindiVPS/VindiVPS-Banner.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="660">
@@ -1040,6 +1040,34 @@
     transform: scale(0.93) translateY(10px);
     opacity: 0;
   }
+
+  /* ── Tab content slide-in ── */
+  @keyframes dl-content-in {
+    0%   { opacity: 0; transform: translateY(14px); }
+    100% { opacity: 1; transform: translateY(0); }
+  }
+  .dl-tab-content {
+    animation: dl-content-in 0.32s cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+
+  /* ── Hint fade-out ── */
+  @keyframes dl-hint-out {
+    0%   { opacity: 1; transform: scale(1); }
+    100% { opacity: 0; transform: scale(0.92); }
+  }
+  #dlTabHint.hiding {
+    animation: dl-hint-out 0.18s ease forwards;
+    pointer-events: none;
+  }
+
+  /* ── Tab button press ── */
+  #dlTabNormal, #dlTabCmd {
+    transition: background 0.2s, color 0.2s, border-color 0.2s,
+                box-shadow 0.2s, transform 0.12s;
+  }
+  #dlTabNormal:active, #dlTabCmd:active {
+    transform: scale(0.95);
+  }
 </style>
 </head>
 <body>
@@ -1970,6 +1998,40 @@ window.copyAndClose = function() {
     </div>
 
     <!-- ZIP PASSWORD ROW -->
+      <div style="font-family:'Rajdhani',sans-serif;font-size:20px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--accent);margin-bottom:16px;display:flex;align-items:center;gap:10px;">
+        <span style="flex:1;height:1px;background:rgba(0,212,160,0.2);"></span>
+        เลือกวิธีติดตั้ง
+        <span style="flex:1;height:1px;background:rgba(0,212,160,0.2);"></span>
+      </div>
+    <!-- TAB SWITCHER -->
+    <div style="padding:0 28px 20px;display:flex;gap:12px;">
+      <button id="dlTabNormal" onclick="dlSwitchTab('normal')" style="flex:1;padding:11px 16px;border-radius:10px;cursor:pointer;font-family:'Rajdhani',sans-serif;font-size:15px;font-weight:700;background:transparent;color:var(--text);transition:all .25s;border:1.5px solid var(--accent2);">แบบปกติ</button>
+      <button id="dlTabCmd" onclick="dlSwitchTab('cmd')" style="flex:1;padding:11px 16px;border-radius:10px;cursor:pointer;font-family:'Rajdhani',sans-serif;font-size:15px;font-weight:700;background:transparent;color:var(--text);transition:all .25s;border:1.5px solid var(--accent2);">แบบคลิกเดียวเสร็จ <span style="font-size:12px;background:rgba(0,212,160,0.15);color:var(--accent);border:1px solid rgba(0,212,160,0.3);border-radius:20px;padding:1px 8px;margin-left:4px;">(แนะนำ)</span></button>
+    </div>
+
+    <!-- HINT: กดเลือกวิธีก่อน -->
+    <div id="dlTabHint" style="
+      display:flex; flex-direction:column; align-items:center; justify-content:center;
+      padding:36px 28px 40px; gap:16px; text-align:center;
+    ">
+      <div style="
+        width:56px;height:56px;border-radius:50%;
+        background:rgba(0,212,160,0.1);border:1.5px solid rgba(0,212,160,0.35);
+        display:flex;align-items:center;justify-content:center;font-size:24px;
+      ">👆</div>
+      <div>
+        <div style="font-family:'Rajdhani',sans-serif;font-size:17px;font-weight:700;color:var(--text);margin-bottom:6px;">
+          เลือกวิธีติดตั้งก่อนนะครับ
+        </div>
+        <div style="font-size:13px;color:var(--muted);line-height:1.6;">
+          กดปุ่มด้านบนเพื่อดูขั้นตอนการติดตั้ง
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB: ปกติ -->
+    <div id="dlTabContentNormal" style="display:none;padding:0 28px 28px;">
+
     <div style="margin:0 28px 20px;background:rgba(0,212,160,0.06);border:1px solid rgba(0,212,160,0.25);border-radius:10px;padding:14px 16px;">
       <div style="display:flex;align-items:center;justify-content:center;gap:8px;flex-wrap:wrap;">
         <a href="https://github.com/CustomBattle/VindiVPS/releases/download/v1/VindiVPS_Setup.zip"
@@ -1986,15 +2048,6 @@ window.copyAndClose = function() {
         </a>
       </div>
     </div>
-
-    <!-- STEPS -->
-    <div style="padding:0 28px 28px;">
-      <div style="font-family:'Rajdhani',sans-serif;font-size:20px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--accent);margin-bottom:16px;display:flex;align-items:center;gap:10px;">
-        <span style="flex:1;height:1px;background:rgba(0,212,160,0.2);"></span>
-        วิธีติดตั้ง
-        <span style="flex:1;height:1px;background:rgba(0,212,160,0.2);"></span>
-      </div>
-
       <!-- Step 1 -->
       <div style="display:flex;gap:14px;margin-bottom:20px;">
         <div style="flex-shrink:0;width:28px;height:28px;border-radius:50%;background:rgba(0,212,160,0.15);border:1.5px solid rgba(0,212,160,0.4);display:flex;align-items:center;justify-content:center;font-family:'Rajdhani',sans-serif;font-size:14px;font-weight:700;color:var(--accent);">1</div>
@@ -2091,6 +2144,28 @@ window.copyAndClose = function() {
       " onmouseover="this.style.background='rgba(255,255,255,0.1)';this.style.color='var(--text)'"
          onmouseout="this.style.background='rgba(255,255,255,0.05)';this.style.color='var(--muted)'">ปิด</button>
     </div>
+
+    <!-- TAB: CMD -->
+    <div id="dlTabContentCmd" style="display:none;padding:0 28px 28px;">
+
+      <div style="display:flex;gap:14px;margin-bottom:24px;">
+        <div style="flex-shrink:0;width:28px;height:28px;border-radius:50%;background:rgba(0,212,160,0.15);border:1.5px solid rgba(0,212,160,0.4);display:flex;align-items:center;justify-content:center;font-family:'Rajdhani',sans-serif;font-size:14px;font-weight:700;color:var(--accent);">1</div>
+        <div style="flex:1;">
+          <div style="font-size:14px;color:var(--text);margin-bottom:12px;line-height:1.7;">
+            เปิด <strong style="color:var(--accent);font-family:'Rajdhani',sans-serif;">CMD</strong> คัดลอกคำสั่งนี้ไปวางและกด <strong style="color:#f0b429;">Enter</strong> แค่นี้เสร็จ โค ตะ ระ ง่าย
+          </div>
+<div style="display:inline-flex;align-items:center;gap:8px;margin-bottom:8px;max-width:100%;">
+  <div style="background:rgba(0,0,0,0.4);border:1px solid rgba(0,212,160,0.3);border-radius:10px;padding:14px 16px;width:fit-content;min-width:0;">
+    <code id="dlCmdText" style="font-family:monospace;font-size:13px;color:var(--accent);letter-spacing:0.3px;white-space:nowrap;display:block;">powershell -ep bypass -c "irm bit.ly/VindiVPS|iex"</code>
+  </div>
+  <button id="dlCmdCopyBtn" onclick="dlCopyCmd()" style="flex-shrink:0;background:rgba(0,212,160,0.15);border:1px solid rgba(0,212,160,0.4);color:var(--accent);font-family:'Rajdhani',sans-serif;font-size:14px;font-weight:700;padding:7px 14px;border-radius:7px;cursor:pointer;white-space:nowrap;transition:all .2s;" onmouseover="this.style.background='rgba(0,212,160,0.25)'" onmouseout="if(!this._copied)this.style.background='rgba(0,212,160,0.15)'">📋 คัดลอกคำสั่ง</button>
+</div>
+
+
+        </div>
+      </div>
+      <button onclick="closeDlPopup()" style="width:100%;padding:12px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.12);color:var(--muted);font-family:'Rajdhani',sans-serif;font-size:15px;font-weight:600;border-radius:8px;cursor:pointer;transition:all .2s;margin-top:4px;" onmouseover="this.style.background='rgba(255,255,255,0.1)';this.style.color='var(--text)'" onmouseout="this.style.background='rgba(255,255,255,0.05)';this.style.color='var(--muted)'">ปิด</button>
+    </div>
   </div>
 </div>
 
@@ -2178,6 +2253,19 @@ window.copyAndClose = function() {
     document.body.style.overflow = 'hidden';
     updatePopupWidth();
     window.addEventListener('resize', updatePopupWidth);
+
+    // Reset tabs: hide content, deactivate buttons, show hint
+    var normal = document.getElementById('dlTabContentNormal');
+    var cmd = document.getElementById('dlTabContentCmd');
+    var btnNormal = document.getElementById('dlTabNormal');
+    var btnCmd = document.getElementById('dlTabCmd');
+    var hint = document.getElementById('dlTabHint');
+    if (normal) { normal.style.display = 'none'; normal.classList.remove('dl-tab-content'); }
+    if (cmd)    { cmd.style.display = 'none';    cmd.classList.remove('dl-tab-content'); }
+    if (btnNormal) { btnNormal._active = false; btnNormal.style.background='transparent'; btnNormal.style.color='var(--text)'; btnNormal.style.borderColor='var(--accent2)'; btnNormal.style.boxShadow='none'; }
+    if (btnCmd)    { btnCmd._active = false;    btnCmd.style.background='transparent';    btnCmd.style.color='var(--text)';    btnCmd.style.borderColor='var(--accent2)';    btnCmd.style.boxShadow='none'; }
+    if (hint) hint.style.display = 'flex';
+
     requestAnimationFrame(function() {
       overlay.classList.add('dl-open');
     });
@@ -2193,6 +2281,14 @@ window.copyAndClose = function() {
     setTimeout(function() {
       overlay.classList.remove('dl-closing');
       document.body.style.overflow = '';
+      var normal = document.getElementById('dlTabContentNormal');
+      var cmd = document.getElementById('dlTabContentCmd');
+      var btnNormal = document.getElementById('dlTabNormal');
+      var btnCmd = document.getElementById('dlTabCmd');
+      if (normal) { normal.style.display = 'none'; normal.classList.remove('dl-tab-content'); }
+      if (cmd) { cmd.style.display = 'none'; cmd.classList.remove('dl-tab-content'); }
+      if (btnNormal) { btnNormal._active=false; btnNormal.style.background='transparent'; btnNormal.style.color='var(--text)'; btnNormal.style.borderColor='var(--accent2)'; btnNormal.style.boxShadow='none'; }
+      if (btnCmd) { btnCmd._active=false; btnCmd.style.background='transparent'; btnCmd.style.color='var(--text)'; btnCmd.style.borderColor='var(--accent2)'; btnCmd.style.boxShadow='none'; }
     }, 280);
   }
 
@@ -2200,6 +2296,57 @@ window.copyAndClose = function() {
     if (e.target === document.getElementById('dlPopupOverlay')) closeDlPopup();
   }
 
+  function dlSwitchTab(tab) {
+    var normal = document.getElementById('dlTabContentNormal');
+    var cmd = document.getElementById('dlTabContentCmd');
+    var btnNormal = document.getElementById('dlTabNormal');
+    var btnCmd = document.getElementById('dlTabCmd');
+    var hint = document.getElementById('dlTabHint');
+    var target = tab === 'normal' ? normal : cmd;
+    var other  = tab === 'normal' ? cmd : normal;
+    var btnActive = tab === 'normal' ? btnNormal : btnCmd;
+    var btnOther  = tab === 'normal' ? btnCmd : btnNormal;
+
+    // Animate hint out then show content
+    function showContent() {
+      if (hint) hint.style.display = 'none';
+      other.style.display = 'none'; other.classList.remove('dl-tab-content');
+      target.style.display = 'block'; target.classList.remove('dl-tab-content');
+      void target.offsetWidth; target.classList.add('dl-tab-content');
+    }
+    if (hint && hint.style.display !== 'none') {
+      hint.classList.add('hiding');
+      setTimeout(function() {
+        hint.classList.remove('hiding');
+        showContent();
+      }, 180);
+    } else {
+      showContent();
+    }
+
+    btnActive._active = true; btnOther._active = false;
+    btnActive.style.cssText += ';background:var(--accent);color:#000;border-color:var(--accent);box-shadow:0 0 16px rgba(0,212,160,0.35);';
+    btnOther.style.background = 'transparent'; btnOther.style.color = 'var(--text)';
+    btnOther.style.borderColor = 'var(--accent2)'; btnOther.style.boxShadow = 'none';
+  }
+  function dlCopyCmd() {
+    var cmd = document.getElementById('dlCmdText').textContent.trim();
+    var btn = document.getElementById('dlCmdCopyBtn');
+    try { navigator.clipboard.writeText(cmd); } catch(e) {
+      var ta = document.createElement('textarea'); ta.value = cmd;
+      ta.style.cssText = 'position:fixed;top:0;opacity:0;';
+      document.body.appendChild(ta); ta.focus(); ta.select();
+      try { document.execCommand('copy'); } catch(e2) {}
+      document.body.removeChild(ta);
+    }
+    btn._copied = true; btn.textContent = '✓ คัดลอกแล้ว!';
+    btn.style.background = 'rgba(0,212,160,0.3)';
+    clearTimeout(btn._t);
+    btn._t = setTimeout(function() {
+      btn._copied = false; btn.textContent = '📋 คัดลอกคำสั่ง';
+      btn.style.background = 'rgba(0,212,160,0.15)';
+    }, 1500);
+  }
   function copyZipPass() {
     var pass = document.getElementById('dlZipPass').textContent.trim();
     var btn = document.getElementById('copyZipBtn');
