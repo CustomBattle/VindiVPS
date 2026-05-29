@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta property="og:type" content="website">
 <meta property="og:title" content="VindiVPS — VPS สำหรับ Vindictus">
-<meta property="og:description" content="แก้อาการ 1 Bar · แก้อาการหลุด">
+<meta property="og:description" content="แก้โรค 1 Bar · อาการหลุด · ใช้งานง่าย">
 <meta property="og:image" content="https://custombattle.github.io/VindiVPS/VindiVPS-Banner.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="660">
@@ -2160,7 +2160,19 @@ window.copyAndClose = function() {
   </div>
   <button id="dlCmdCopyBtn" onclick="dlCopyCmd()" style="flex-shrink:0;background:rgba(0,212,160,0.15);border:1px solid rgba(0,212,160,0.4);color:var(--accent);font-family:'Rajdhani',sans-serif;font-size:14px;font-weight:700;padding:7px 14px;border-radius:7px;cursor:pointer;white-space:nowrap;transition:all .2s;" onmouseover="this.style.background='rgba(0,212,160,0.25)'" onmouseout="if(!this._copied)this.style.background='rgba(0,212,160,0.15)'">📋 คัดลอกคำสั่ง</button>
 </div>
-
+          <div id="dlStep1Img" style="
+            width:100%;min-height:80px;overflow:hidden;border-radius:8px;
+            background:rgba(255,255,255,0.04);border:1px dashed rgba(255,255,255,0.12);
+            display:flex;align-items:center;justify-content:center;
+            color:var(--muted);font-size:12px;
+          ">
+            <video
+              class="step-video"
+              loop muted playsinline preload="auto"
+              style="width:100%;height:100%;object-fit:contain;display:block;">
+              <source src="oneClick.webm" type="video/webm">
+            </video>
+          </div>
 
         </div>
       </div>
